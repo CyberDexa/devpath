@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Authenticating... | DevPath">
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="text-center">
+      <div class="w-12 h-12 border-2 border-teal/30 border-t-teal rounded-full animate-spin mx-auto mb-4"></div>
+      <h1 class="text-xl font-display font-semibold text-bright mb-2">Authenticating...</h1>
+      <p class="text-dim">You'll be redirected shortly.</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { supabase } from "../../lib/supabase";
+
+  // Handle the OAuth callback
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  const accessToken = hashParams.get("access_token");
+  const refreshToken = hashParams.get("refresh_token");
+
+  if (accessToken && refreshToken) {
+    supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    }).then(({ error }) => {
+      if (error) {
+        console.error("Auth callback error:", error);
+        window.location.href = "/login?error=auth_failed";
+      } else {
+        window.location.href = "/profile";
+      }
+    });
+  } else {
+    // Check for error in URL
+    const searchParams = new URLSearchParams(window.location.search);
+    const error = searchParams.get("error");
+    if (error) {
+      window.location.href = `/login?error=${error}`;
+    } else {
+      // Supabase may handle session automatically via PKCE
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          window.location.href = "/profile";
+        } else {
+          window.location.href = "/login";
+        }
+      });
+    }
+  }
+</script>
