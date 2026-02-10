@@ -1,0 +1,106 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import RoadmapViewer from "../../components/roadmap/RoadmapViewer";
+import { allRoadmaps, getRoadmapById } from "../../data/roadmaps";
+
+// Generate static paths for all roadmaps
+export function getStaticPaths() {
+  return allRoadmaps.map((roadmap) => ({
+    params: { id: roadmap.id },
+  }));
+}
+
+const { id } = Astro.params;
+const roadmap = getRoadmapById(id!);
+
+if (!roadmap) {
+  return Astro.redirect("/roadmaps");
+}
+---
+
+<PageLayout
+  title={roadmap.title}
+  description={roadmap.description}
+>
+  <section class="max-w-6xl mx-auto px-6 py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-dim mb-8">
+      <a href="/roadmaps" class="hover:text-teal transition-colors">
+        Roadmaps
+      </a>
+      <svg
+        class="w-3.5 h-3.5 text-muted"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M9 18l6-6-6-6"></path>
+      </svg>
+      <span class="text-text">{roadmap.title}</span>
+    </nav>
+
+    <!-- Roadmap Viewer (React Island) -->
+    <RoadmapViewer roadmap={roadmap} client:load />
+
+    <!-- Additional Roadmap Info -->
+    <div class="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Key Stats -->
+      <div class="rounded-xl bg-surface border border-white/5 p-6">
+        <h3 class="font-display font-bold text-bright mb-4 text-sm uppercase tracking-wider">
+          Overview
+        </h3>
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-dim text-sm">Total Topics</span>
+            <span class="text-text font-mono text-sm">{roadmap.nodes.length}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-dim text-sm">Estimated Time</span>
+            <span class="text-text font-mono text-sm">~{roadmap.estimatedHours}h</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-dim text-sm">Difficulty</span>
+            <span class="text-text text-sm capitalize">{roadmap.difficulty}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personalization CTA -->
+      <div class="rounded-xl bg-surface border border-white/5 p-6">
+        <h3 class="font-display font-bold text-bright mb-3 text-sm uppercase tracking-wider">
+          Personalize
+        </h3>
+        <p class="text-sm text-dim mb-4">
+          Take a quick assessment to get a customized version of this roadmap based on your current skills.
+        </p>
+        <a
+          href="/ai-tutor"
+          class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold bg-teal text-void hover:bg-teal-dim transition-all duration-200"
+        >
+          Start Assessment
+        </a>
+      </div>
+
+      <!-- AI Tutor CTA -->
+      <div class="rounded-xl bg-surface border border-white/5 p-6">
+        <h3 class="font-display font-bold text-bright mb-3 text-sm uppercase tracking-wider">
+          AI Tutor
+        </h3>
+        <p class="text-sm text-dim mb-4">
+          Have questions about any topic? Our AI tutor can explain concepts, suggest resources, and quiz you.
+        </p>
+        <a
+          href={`/ai-tutor?roadmap=${roadmap.id}`}
+          class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-raised border border-white/8 text-text hover:bg-elevated transition-all"
+        >
+          <svg class="mr-2 w-4 h-4 text-violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4zM5 10v2a7 7 0 0 0 14 0v-2"></path>
+            <path d="M12 19v3M8 22h8"></path>
+          </svg>
+          Ask AI Tutor
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

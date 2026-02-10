@@ -1,0 +1,454 @@
+import { useState, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { clsx } from "clsx";
+import type { RoadmapData, RoadmapNode, NodeStatus } from "../../data/types";
+import { categoryColors, difficultyConfig } from "../../data/types";
+import Badge from "../ui/Badge";
+import Button from "../ui/Button";
+
+interface RoadmapViewerProps {
+  roadmap: RoadmapData;
+}
+
+export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
+  const [nodeStatuses, setNodeStatuses] = useState<Record<string, NodeStatus>>(
+    {},
+  );
+  const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null);
+
+  // Compute node positions for a vertical flow layout
+  const layoutNodes = useMemo(() => {
+    const levels: RoadmapNode[][] = [];
+    const placed = new Set<string>();
+    const nodeMap = new Map(roadmap.nodes.map((n) => [n.id, n]));
+
+    // Find root nodes (no incoming edges)
+    const hasIncoming = new Set(roadmap.edges.map((e) => e.to));
+    const roots = roadmap.nodes.filter((n) => !hasIncoming.has(n.id));
+
+    // BFS to assign levels
+    let queue = roots.map((n) => ({ node: n, level: 0 }));
+    while (queue.length > 0) {
+      const { node, level } = queue.shift()!;
+      if (placed.has(node.id)) continue;
+      placed.add(node.id);
+
+      if (!levels[level]) levels[level] = [];
+      levels[level].push(node);
+
+      // Find children
+      const children = roadmap.edges
+        .filter((e) => e.from === node.id)
+        .map((e) => nodeMap.get(e.to))
+        .filter(Boolean) as RoadmapNode[];
+
+      children.forEach((child) => {
+        if (!placed.has(child.id)) {
+          queue.push({ node: child, level: level + 1 });
+        }
+      });
+    }
+
+    // Assign positions based on levels
+    const NODE_WIDTH = 200;
+    const NODE_GAP_X = 40;
+    const LEVEL_GAP_Y = 100;
+
+    return levels.flatMap((levelNodes, levelIdx) => {
+      const totalWidth =
+        levelNodes.length * NODE_WIDTH +
+        (levelNodes.length - 1) * NODE_GAP_X;
+      const startX = -totalWidth / 2;
+
+      return levelNodes.map((node, nodeIdx) => ({
+        ...node,
+        layoutX: startX + nodeIdx * (NODE_WIDTH + NODE_GAP_X) + NODE_WIDTH / 2,
+        layoutY: levelIdx * LEVEL_GAP_Y,
+        level: levelIdx,
+      }));
+    });
+  }, [roadmap]);
+
+  // Compute SVG edges between laid-out nodes
+  const edgePaths = useMemo(() => {
+    const nodePositions = new Map(
+      layoutNodes.map((n) => [n.id, { x: n.layoutX, y: n.layoutY }]),
+    );
+
+    return roadmap.edges
+      .map((edge) => {
+        const from = nodePositions.get(edge.from);
+        const to = nodePositions.get(edge.to);
+        if (!from || !to) return null;
+
+        const startY = from.y + 28;
+        const endY = to.y - 28;
+        const midY = (startY + endY) / 2;
+
+        return {
+          key: `${edge.from}-${edge.to}`,
+          d: `M ${from.x} ${startY} C ${from.x} ${midY}, ${to.x} ${midY}, ${to.x} ${endY}`,
+          fromStatus: nodeStatuses[edge.from] || "not-started",
+          toStatus: nodeStatuses[edge.to] || "not-started",
+        };
+      })
+      .filter(Boolean);
+  }, [layoutNodes, roadmap.edges, nodeStatuses]);
+
+  // Viewport
+  const minX = Math.min(...layoutNodes.map((n) => n.layoutX)) - 130;
+  const maxX = Math.max(...layoutNodes.map((n) => n.layoutX)) + 130;
+  const maxY = Math.max(...layoutNodes.map((n) => n.layoutY)) + 60;
+  const viewWidth = maxX - minX;
+  const viewHeight = maxY + 60;
+
+  const toggleNodeStatus = useCallback((nodeId: string) => {
+    setNodeStatuses((prev) => {
+      const current = prev[nodeId] || "not-started";
+      const next: NodeStatus =
+        current === "not-started"
+          ? "learning"
+          : current === "learning"
+            ? "completed"
+            : "not-started";
+      return { ...prev, [nodeId]: next };
+    });
+  }, []);
+
+  const completedCount = Object.values(nodeStatuses).filter(
+    (s) => s === "completed",
+  ).length;
+  const progressPercent =
+    roadmap.nodes.length > 0
+      ? Math.round((completedCount / roadmap.nodes.length) * 100)
+      : 0;
+
+  const getNodeStyle = (status: NodeStatus | undefined) => {
+    switch (status) {
+      case "completed":
+        return "border-teal bg-teal/10 shadow-glow";
+      case "learning":
+        return "border-amber bg-amber/8 shadow-[0_0_20px_rgba(240,160,48,0.15)]";
+      default:
+        return "border-white/10 bg-surface hover:border-white/20";
+    }
+  };
+
+  return (
+    <div className="w-full">
+      {/* Progress Header */}
+      <div className="flex items-center justify-between mb-6 px-1">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">{roadmap.icon}</span>
+          <div>
+            <h2 className="font-display font-bold text-xl text-bright">
+              {roadmap.title}
+            </h2>
+            <p className="text-sm text-dim">{roadmap.description}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <div className="text-sm font-mono text-teal font-semibold">
+              {progressPercent}%
+            </div>
+            <div className="text-xs text-dim">
+              {completedCount}/{roadmap.nodes.length} done
+            </div>
+          </div>
+          <div className="w-32 h-2 rounded-full bg-elevated overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-teal to-sky transition-all duration-500"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Roadmap Canvas */}
+      <div className="relative bg-abyss rounded-2xl border border-white/5 overflow-x-auto">
+        <div className="dot-grid absolute inset-0 opacity-30 pointer-events-none" />
+
+        <svg
+          viewBox={`${minX} -30 ${viewWidth} ${viewHeight}`}
+          className="w-full min-w-[600px]"
+          style={{ height: `${Math.max(viewHeight + 40, 400)}px` }}
+        >
+          {/* Edges */}
+          {edgePaths.map(
+            (edge) =>
+              edge && (
+                <path
+                  key={edge.key}
+                  d={edge.d}
+                  fill="none"
+                  stroke={
+                    edge.fromStatus === "completed"
+                      ? "#00e5a0"
+                      : "rgba(255,255,255,0.08)"
+                  }
+                  strokeWidth="2"
+                  strokeDasharray={
+                    edge.fromStatus === "completed" ? "none" : "6 4"
+                  }
+                  className="transition-all duration-300"
+                />
+              ),
+          )}
+
+          {/* Nodes */}
+          {layoutNodes.map((node, i) => {
+            const status = nodeStatuses[node.id];
+            const isCompleted = status === "completed";
+            const isLearning = status === "learning";
+
+            return (
+              <g
+                key={node.id}
+                transform={`translate(${node.layoutX - 90}, ${node.layoutY - 24})`}
+                className="cursor-pointer"
+                onClick={() => setSelectedNode(node)}
+                role="button"
+                tabIndex={0}
+              >
+                {/* Node Background */}
+                <rect
+                  width="180"
+                  height="48"
+                  rx="12"
+                  fill={
+                    isCompleted
+                      ? "rgba(0,229,160,0.08)"
+                      : isLearning
+                        ? "rgba(240,160,48,0.06)"
+                        : "#111118"
+                  }
+                  stroke={
+                    isCompleted
+                      ? "#00e5a0"
+                      : isLearning
+                        ? "#f0a030"
+                        : "rgba(255,255,255,0.08)"
+                  }
+                  strokeWidth="1.5"
+                  className="transition-all duration-300"
+                />
+
+                {/* Status Indicator */}
+                <circle
+                  cx="24"
+                  cy="24"
+                  r="8"
+                  fill={
+                    isCompleted
+                      ? "#00e5a0"
+                      : isLearning
+                        ? "#f0a030"
+                        : "rgba(255,255,255,0.06)"
+                  }
+                  stroke={
+                    isCompleted
+                      ? "#00e5a0"
+                      : isLearning
+                        ? "#f0a030"
+                        : "rgba(255,255,255,0.12)"
+                  }
+                  strokeWidth="1.5"
+                  className="transition-all duration-300"
+                />
+                {isCompleted && (
+                  <path
+                    d="M20 24 L23 27 L28 21"
+                    fill="none"
+                    stroke="#050508"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                )}
+
+                {/* Label */}
+                <text
+                  x="42"
+                  y="20"
+                  fill={isCompleted || isLearning ? "#f0f0fa" : "#e0e0ec"}
+                  fontSize="12"
+                  fontWeight="600"
+                  fontFamily="'Cabinet Grotesk', system-ui, sans-serif"
+                >
+                  {node.label.length > 16
+                    ? node.label.slice(0, 16) + "…"
+                    : node.label}
+                </text>
+
+                {/* Difficulty */}
+                <text
+                  x="42"
+                  y="36"
+                  fill={
+                    node.difficulty === "beginner"
+                      ? "#00e5a0"
+                      : node.difficulty === "intermediate"
+                        ? "#f0a030"
+                        : "#f04070"
+                  }
+                  fontSize="9"
+                  fontWeight="500"
+                  textTransform="uppercase"
+                >
+                  {node.difficulty}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Node Detail Panel */}
+      <AnimatePresence>
+        {selectedNode && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="mt-6 rounded-2xl bg-surface border border-white/8 p-6"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="font-display font-bold text-lg text-bright">
+                  {selectedNode.label}
+                </h3>
+                <p className="text-sm text-dim mt-1">
+                  {selectedNode.description}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedNode(null)}
+                className="p-1 text-dim hover:text-text transition-colors"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3 mb-5">
+              <Badge
+                variant={
+                  selectedNode.difficulty === "beginner"
+                    ? "teal"
+                    : selectedNode.difficulty === "intermediate"
+                      ? "amber"
+                      : "rose"
+                }
+                size="sm"
+              >
+                {difficultyConfig[selectedNode.difficulty]?.label}
+              </Badge>
+              <Badge variant="default" size="sm">
+                ~{Math.round(selectedNode.estimatedMinutes / 60)}h
+              </Badge>
+              <Badge variant="sky" size="sm">
+                {selectedNode.category}
+              </Badge>
+            </div>
+
+            {/* Resources */}
+            {selectedNode.resources.length > 0 && (
+              <div className="mb-5">
+                <h4 className="text-xs uppercase tracking-wider text-subtle font-semibold mb-3">
+                  Resources
+                </h4>
+                <div className="space-y-2">
+                  {selectedNode.resources.map((resource, i) => (
+                    <a
+                      key={i}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg bg-raised border border-white/5 hover:border-teal/20 transition-all duration-200 group"
+                    >
+                      <span className="text-xs uppercase font-mono text-dim">
+                        {resource.type === "video" ? "🎬" : "📄"}{" "}
+                        {resource.type}
+                      </span>
+                      <span className="text-sm text-text group-hover:text-teal transition-colors">
+                        {resource.title}
+                      </span>
+                      <svg
+                        className="ml-auto w-4 h-4 text-muted group-hover:text-teal transition-colors"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M7 17L17 7M17 7H7M17 7v10" />
+                      </svg>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Status Toggle */}
+            <div className="flex gap-2">
+              {(
+                ["not-started", "learning", "completed"] as NodeStatus[]
+              ).map((status) => {
+                const isActive =
+                  (nodeStatuses[selectedNode.id] || "not-started") ===
+                  status;
+                return (
+                  <Button
+                    key={status}
+                    variant={isActive ? "primary" : "secondary"}
+                    size="sm"
+                    onClick={() => {
+                      setNodeStatuses((prev) => ({
+                        ...prev,
+                        [selectedNode.id]: status,
+                      }));
+                    }}
+                  >
+                    {status === "not-started"
+                      ? "Not Started"
+                      : status === "learning"
+                        ? "📖 Learning"
+                        : "✅ Done"}
+                  </Button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Legend */}
+      <div className="mt-4 flex items-center gap-6 px-1">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-white/8 border border-white/12" />
+          <span className="text-xs text-dim">Not started</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-amber/20 border border-amber" />
+          <span className="text-xs text-dim">Learning</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-teal/20 border border-teal" />
+          <span className="text-xs text-dim">Completed</span>
+        </div>
+        <div className="ml-auto text-xs text-muted">
+          Click a node to see details • Click status circle to toggle progress
+        </div>
+      </div>
+    </div>
+  );
+}
