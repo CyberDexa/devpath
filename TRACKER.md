@@ -1,73 +1,72 @@
-# DevPath — Quick Reference
+# DevPath - Project Tracker
 
-## Project Status: � In Development
+## Project Status: Phase 1 Nearing Completion
 
 | Metric | Value |
 |--------|-------|
 | **Current Phase** | Phase 1: Foundation |
-| **Current Week** | Week 1-2 |
-| **Overall Progress** | 7% |
-| **Next Milestone** | Public Beta (Week 6) |
+| **Pages Built** | 34 |
+| **Overall Progress** | ~95% of Phase 1 |
+| **Git Commits** | 10 |
+| **Next Milestone** | Deploy to Vercel |
 
 ---
 
-## Sprint Board (Week 1)
+## Phase 1 Completion Status
 
-### 🔴 To Do
-| Task | Priority | Est. |
-|------|----------|------|
-| Create Supabase project | P0 | 30m |
-| Configure deployment (Vercel) | P1 | 1h |
-| Form input components | P1 | 2h |
-| Modal/Dialog component | P1 | 1h |
-| Loading/skeleton states | P2 | 1h |
-| Auth pages (login/signup) | P0 | 3h |
-| Zoom/pan controls for roadmap | P1 | 2h |
+### Done
+| Feature | Notes |
+|---------|-------|
+| Astro + React + Tailwind scaffold | v5.17 + 19.2 + 4.1 |
+| Precision Noir design system | Colors, fonts, utilities, animations |
+| Self-hosted fonts | Cabinet Grotesk + General Sans |
+| Base layouts (BaseLayout, PageLayout) | HTML shell, meta, slots |
+| Header with mobile nav | Hamburger, slide, backdrop, ESC close |
+| Auth-aware header (React Island) | User dropdown, XP badge, avatar |
+| Footer with 4-column links | Platform, Resources, Company, Social |
+| 11 UI components | Button, Card, Badge, ProgressBar, Input, Textarea, Select, Modal, Skeleton, Toggle |
+| 5 roadmaps with full data | Frontend, Backend, Fullstack, DevOps, AI |
+| Interactive roadmap viewer | BFS layout, SVG edges, zoom/pan, keyboard nav |
+| Cloud-synced roadmap progress | Supabase + localStorage fallback, debounced |
+| Roadmaps explore page | Search, filter, sort |
+| Auth pages (login/signup) | Wired to Supabase signUp/signIn/OAuth |
+| OAuth callback page | PKCE + hash token handling |
+| Profile dashboard | Heatmap, badges, activity, stats |
+| Settings page (6 tabs) | Profile, Notifications, Appearance, Privacy, Editor, Account |
+| 404 page (terminal-style) | Interactive terminal Easter egg |
+| Pricing page (3-tier) | Freemium/Pro/Teams, comparison table, FAQ |
+| AI Tutor chat UI | Real API (Claude/GPT) with template fallback |
+| Leaderboard | Podium, ranked table, time filters |
+| Projects catalog (17 projects) | Grid/list views, search, filter, sort, detail modal |
+| Code Editor component | Full IDE with run/test/AI review |
+| Project submissions | Wired to Supabase with XP rewards |
+| 18 project detail pages | Instructions + editor |
+| Supabase integration | Client, schema (7 tables), auth, data layer |
+| Enhanced landing page | Hero, features, code preview, roadmaps, comparison, how-it-works, testimonials, CTA |
+| Responsive design verified | Mobile (375px), tablet, desktop tested |
 
-### 🟡 In Progress
-| Task | Started | Notes |
-|------|---------|-------|
-| Remaining UI components | 2026-02-10 | Form inputs, modal, skeletons |
-
-### 🟢 Done This Week
-| Task | Completed | Notes |
-|------|-----------|-------|
-| Competitive analysis of roadmap.sh | 2026-02-10 | ✅ |
-| Project planning & architecture | 2026-02-10 | ✅ |
-| Task tracker created | 2026-02-10 | ✅ |
-| Astro + React + Tailwind setup | 2026-02-10 | ✅ |
-| Precision Noir design system | 2026-02-10 | ✅ Colors, fonts, utilities |
-| Header + Footer components | 2026-02-10 | ✅ Glass nav, 4-column footer |
-| Button, Card, Badge, ProgressBar | 2026-02-10 | ✅ Full variant system |
-| 5 complete roadmap data sets | 2026-02-10 | ✅ Frontend, Backend, Fullstack, DevOps, AI |
-| RoadmapViewer interactive island | 2026-02-10 | ✅ BFS layout, SVG edges, detail panel |
-| Landing page + Roadmaps pages | 2026-02-10 | ✅ Hero, features, comparison table |
-| Git repository initialized | 2026-02-10 | ✅ Initial commit |
+### Remaining for Phase 1
+| Feature | Priority | Est. |
+|---------|----------|------|
+| Deploy to Vercel | P0 | 1h |
+| Create Supabase project and seed | P0 | 30m |
+| Wire ProfileDashboard to real data | P1 | 2h |
+| Wire SettingsPanel to real data | P1 | 2h |
+| Wire Leaderboard to real data | P2 | 1h |
+| SEO meta tags and Open Graph | P1 | 1h |
+| Lighthouse optimization | P2 | 2h |
 
 ---
 
-## Key Metrics to Track
+## Key Metrics
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| **Beta Signups** | 100 | 0 |
-| **Roadmaps Created** | 5 | 5 |
-| **Test Coverage** | 80% | 0% |
-| **Lighthouse Score** | 95+ | — |
-| **Week-2 Retention** | 40% | — |
-
----
-
-## Upcoming Milestones
-
-```
-Week 6  ➜ 🎯 Milestone 1: Public Beta Launch
-Week 12 ➜ 🎯 Milestone 2: Adaptive AI Live
-Week 18 ➜ 🎯 Milestone 3: Code Editor Shipped
-Week 24 ➜ 🎯 Milestone 4: Gamification Complete
-Week 30 ➜ 🎯 Milestone 5: Career Features Live
-Week 36 ➜ 🚀 FULL LAUNCH
-```
+| **Pages** | 40+ | 34 |
+| **Roadmaps** | 5 | 5 |
+| **Projects** | 17+ | 17 |
+| **Build Errors** | 0 | 0 |
+| **Lighthouse Score** | 95+ | TBD |
 
 ---
 
@@ -81,56 +80,67 @@ npm run dev
 # Build for production
 npm run build
 
-# Run tests
-npm test
+# Preview production build
+npm run preview
 
-# Deploy preview
-npm run deploy:preview
-
-# Database migrations
-npx supabase db push
+# Database setup (after creating Supabase project)
+# Run supabase/schema.sql in SQL Editor
 ```
 
 ---
 
-## Important Links
+## Tech Stack
 
-| Resource | URL |
-|----------|-----|
-| GitHub Repo | _(to be created)_ |
-| Production | _(to be deployed)_ |
-| Staging | _(to be deployed)_ |
-| Supabase Dashboard | _(to be created)_ |
-| Figma Designs | _(to be created)_ |
-| Notion/Linear | _(optional)_ |
-
----
-
-## Blocked / Needs Decision
-
-| Item | Blocker | Owner |
-|------|---------|-------|
-| Domain name | Need to check availability | Solo |
-| Supabase setup | Need to create project | Solo |
+| Layer | Technology |
+|-------|-----------|
+| Framework | Astro 5.17 (SSG + Islands) |
+| UI | React 19.2 |
+| Styling | Tailwind CSS 4.1 |
+| Animation | Framer Motion 12.34 |
+| Icons | Lucide React |
+| Database | Supabase (PostgreSQL + Auth + RLS) |
+| AI | Anthropic Claude / OpenAI GPT (hybrid) |
+| Deployment | Vercel (planned) |
 
 ---
 
-## Weekly Log
+## Git History
 
-### Week 1 (Feb 10-16, 2026)
-- **Focus**: Project setup, design system, and core UI
-- **Notes**: 
-  - Completed competitive analysis of roadmap.sh
-  - Defined 6-phase development plan
-  - Created task tracker
-  - Full project scaffold: Astro 5 + React 19 + Tailwind 4
-  - "Precision Noir" design system with Cabinet Grotesk + General Sans
-  - 5 complete roadmap data sets with nodes, edges, resources
-  - Interactive RoadmapViewer with BFS layout algorithm
-  - Landing page, roadmaps listing, dynamic roadmap pages
-  - Build verified: 7 pages, 0 errors
-- **Blockers**: None
+| # | Message | Scope |
+|---|---------|-------|
+| 1 | feat: initial Astro scaffold + design system | Project init, fonts, tokens |
+| 2 | feat: interactive roadmap viewer + all pages | Viewer, data, pages |
+| 3 | feat: settings, 404, mobile nav, explore view | New components |
+| 4 | feat: pricing page, AI tutor chat, leaderboard | Feature pages |
+| 5 | feat: projects catalog + code editor | 17 projects, IDE |
+| 6 | feat: Supabase integration | Schema, auth, data layer |
+| 7 | feat: enhanced landing page | Sections, animations |
+| 8 | feat: enhanced landing page with code preview | Code editor preview |
+| 9 | feat: wire auth, roadmap progress, project submissions | Backend wiring |
+| 10 | feat: AI tutor real API integration | Claude/GPT service |
 
 ---
 
-_Update this file at end of each day/week_
+## Architecture Notes
+
+- **Supabase client** uses lazy Proxy pattern to avoid SSG build errors (no env vars at build time)
+- **React islands** use `client:load` directive (NOT manual createRoot - causes Vite preamble errors)
+- **useRoadmapProgress hook** detects auth state: Supabase when logged in, localStorage fallback when not
+- **AI Tutor** tries Anthropic first, falls back to OpenAI, then to smart templates
+- **XP formula**: level = floor(sqrt(xp/100)) + 1
+
+---
+
+## Phase 2+ Roadmap
+
+| Phase | Focus | Timeline |
+|-------|-------|----------|
+| Phase 2 | Adaptive Learning Engine | Weeks 7-12 |
+| Phase 3 | Advanced Code Environment | Weeks 13-18 |
+| Phase 4 | Gamification & Social | Weeks 19-24 |
+| Phase 5 | Career Integration | Weeks 25-30 |
+| Phase 6 | Scale & Polish | Weeks 31-36 |
+
+---
+
+_Last updated: Session 2_

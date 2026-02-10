@@ -1,6 +1,6 @@
-# DevPath — Project Tracker
+# DevPath - Project Tasks
 
-> **AI-Powered Developer Career Platform**  
+> **AI-Powered Developer Career Platform**
 > An enhanced roadmap.sh competitor featuring adaptive AI learning paths, integrated browser IDE, gamification mechanics, and career integration.
 
 ---
@@ -20,19 +20,19 @@
 ## Progress Dashboard
 
 ```
-Phase 1: Foundation        [████░░░░░░] 40%  ⬅️ CURRENT
+Phase 1: Foundation        [█████████░] 95%  <-- CURRENT
 Phase 2: Adaptive AI       [░░░░░░░░░░] 0%
 Phase 3: Code Environment  [░░░░░░░░░░] 0%
 Phase 4: Gamification      [░░░░░░░░░░] 0%
 Phase 5: Career Integration[░░░░░░░░░░] 0%
 Phase 6: Polish & Scale    [░░░░░░░░░░] 0%
-─────────────────────────────────────────
-Overall Progress           [█░░░░░░░░░] 7%
+──────────────────────────────────────────
+Overall Progress           [██░░░░░░░░] 16%
 ```
 
 ---
 
-## Phase 1: Foundation (Weeks 1–6)
+## Phase 1: Foundation (Weeks 1-6)
 *Goal: Core platform rivaling roadmap.sh with better UX*
 
 ### Week 1: Project Setup
@@ -40,20 +40,21 @@ Overall Progress           [█░░░░░░░░░] 7%
 - [x] Configure Tailwind CSS with custom theme
 - [x] Set up React integration for islands
 - [ ] Create Supabase project (auth, database)
-- [ ] Configure deployment pipeline (Vercel/Cloudflare)
+- [ ] Configure deployment pipeline (Vercel)
 - [x] Set up Git repository and branching strategy
 
 ### Week 2: Design System
-- [x] Define color palette (dark-first theme) — "Precision Noir"
-- [x] Select typography (distinctive fonts, not Inter/Roboto) — Cabinet Grotesk + General Sans
-- [ ] Create base component library:
-  - [x] Button variants
-  - [x] Card components
-  - [ ] Form inputs
-  - [ ] Modal/Dialog
+- [x] Define color palette (dark-first theme) - "Precision Noir"
+- [x] Select typography (Cabinet Grotesk + General Sans, self-hosted)
+- [x] Create base component library:
+  - [x] Button variants (primary, secondary, ghost, destructive, outline)
+  - [x] Card components (with hover, glow effects)
+  - [x] Form inputs (Input, Textarea, Select)
+  - [x] Modal/Dialog component
   - [x] Navigation components (Header + Footer)
+  - [x] Badge, ProgressBar, Toggle, Skeleton
 - [x] Design responsive breakpoints
-- [ ] Create loading/skeleton states
+- [x] Create loading/skeleton states
 
 ### Week 3: Roadmap Data Model
 - [x] Design JSON schema for curriculum structure
@@ -61,45 +62,65 @@ Overall Progress           [█░░░░░░░░░] 7%
   - [x] Edges (prerequisites/relationships)
   - [x] Resources (links, videos, articles)
   - [x] Metadata (difficulty, time estimate)
-- [ ] Create database tables in Supabase
-- [ ] Build content ingestion pipeline
-- [x] Seed first roadmap (Frontend Developer)
+- [x] Create database schema (supabase/schema.sql - 7 tables)
+- [x] Seed 5 roadmaps (Frontend, Backend, Fullstack, DevOps, AI)
 
 ### Week 4: Interactive Roadmap Viewer
-- [x] Build React island: Roadmap Canvas (RoadmapViewer.tsx)
-- [ ] Implement zoom/pan controls
-- [x] Node click → expand panel with resources
+- [x] Build React island: RoadmapViewer.tsx
+- [x] BFS layout algorithm for node positioning
+- [x] SVG edge rendering with curves
+- [x] Zoom/pan controls
+- [x] Node click -> expand panel with resources
 - [x] Node state visualization (not started/learning/completed)
-- [ ] Responsive layout (desktop, tablet, mobile)
-- [ ] Keyboard navigation support
+- [x] Responsive layout (desktop, tablet, mobile)
+- [x] Keyboard navigation support
 
 ### Week 5: Authentication & User Profiles
-- [ ] Supabase Auth integration
-  - [ ] Email/password signup
-  - [ ] GitHub OAuth
-  - [ ] Google OAuth
-- [ ] User profile page design
-- [ ] Settings page (preferences, notifications)
-- [ ] Protected routes middleware
+- [x] Supabase Auth integration
+  - [x] Email/password signup (with profile creation)
+  - [x] GitHub OAuth
+  - [x] Google OAuth
+  - [x] Auth callback page (PKCE + hash tokens)
+- [x] User profile page design (ProfileDashboard)
+- [x] Settings page (6 tabs: Profile, Notifications, Appearance, Privacy, Editor, Account)
+- [x] Auth-aware header (React island with user dropdown)
+- [x] AuthProvider context + useAuth hook
 
 ### Week 6: Progress Tracking
-- [ ] Progress state machine per node
-- [ ] Database schema for user progress
-- [ ] Real-time progress sync (Supabase Realtime)
-- [ ] Progress visualization on roadmap
-- [ ] Profile progress summary cards
-- [x] Seed 4 additional roadmaps (Backend, Full Stack, DevOps, AI Engineer)
+- [x] Progress state machine per node (not-started/learning/completed)
+- [x] Database schema for user progress (roadmap_progress table)
+- [x] useRoadmapProgress hook (Supabase + localStorage fallback)
+- [x] Debounced cloud sync with activity logging
+- [x] Progress visualization on roadmap (color-coded nodes)
+- [x] Cloud sync indicator (Synced / Local only)
 
-### Milestone 1 Checklist
-- [ ] ✅ Deployed to production domain
-- [ ] ✅ 5+ interactive roadmaps live
-- [ ] ✅ User authentication working
-- [ ] ✅ Progress persistence functional
-- [ ] ✅ 100+ beta signups
+### Additional Phase 1 Work Completed
+- [x] Enhanced landing page (hero, features grid, code preview, roadmaps, comparison table, how-it-works, testimonials, CTA)
+- [x] Pricing page (3-tier: Free/Pro/Teams, feature comparison, FAQ)
+- [x] AI Tutor chat UI with real API (Anthropic Claude/OpenAI GPT + template fallback)
+- [x] Leaderboard page (podium, ranked table, time filters, category tabs)
+- [x] Projects catalog (17 projects across 6 categories, grid/list views, search/filter/sort)
+- [x] Code Editor component (full IDE with line numbers, run/test/AI review tabs, settings, fullscreen)
+- [x] ProjectEditor wrapper (Supabase submissions + XP awards + activity logging)
+- [x] 18 project detail pages with instructions + editor
+- [x] 404 page with interactive terminal Easter egg
+- [x] Roadmaps explore page with search/filter/sort
+- [x] Full Supabase data access layer (CRUD, XP system, badges, activity logging)
+- [x] Database types (full TypeScript Database interface for 7 tables)
+- [x] Responsive mobile testing passed (375px, 768px, 1280px)
+
+### Milestone 1 Remaining
+- [ ] Deploy to production (Vercel + @astrojs/vercel adapter)
+- [ ] Create Supabase project, run schema.sql, configure OAuth providers
+- [ ] Wire ProfileDashboard to load real Supabase data (currently mock)
+- [ ] Wire SettingsPanel to update real Supabase data (currently mock)
+- [ ] Wire Leaderboard to real Supabase data (currently mock)
+- [ ] SEO meta tags and Open Graph images
+- [ ] Lighthouse performance audit
 
 ---
 
-## Phase 2: Adaptive AI Learning (Weeks 7–12)
+## Phase 2: Adaptive AI Learning (Weeks 7-12)
 *Goal: Personalization that roadmap.sh completely lacks*
 
 ### Week 7: Skill Assessment System
@@ -110,11 +131,7 @@ Overall Progress           [█░░░░░░░░░] 7%
 - [ ] Initial skill placement on signup
 
 ### Week 8: User Skill Graph
-- [ ] Design `user_skills` schema
-  - [ ] Skill ID, proficiency (0-100)
-  - [ ] Confidence interval
-  - [ ] Last assessed timestamp
-  - [ ] Decay rate
+- [ ] Design user_skills schema
 - [ ] Skill graph visualization (D3.js/Vis.js)
 - [ ] Skill comparison view (current vs target role)
 
@@ -130,65 +147,38 @@ Overall Progress           [█░░░░░░░░░] 7%
 - [ ] Input: user skill graph, goals, timeline
 - [ ] Output: personalized node ordering
 - [ ] "Skip what you know" logic
-- [ ] Learning velocity adjustment
 - [ ] Daily/weekly learning plan generation
 
 ### Week 11: AI Tutor Enhancement
-- [ ] Claude API integration
 - [ ] Context injection: current topic + skill graph
-- [ ] Conversation persistence
+- [ ] Conversation persistence to Supabase
 - [ ] Rate limiting and cost controls
-- [ ] Tutor UI (chat interface island)
+- [ ] Streaming responses
 
 ### Week 12: Local Embeddings & Caching
 - [ ] Set up Ollama with nomic-embed-text
 - [ ] Concept similarity search
 - [ ] Resource recommendation engine
 - [ ] Redis caching layer for AI responses
-- [ ] A/B test: adaptive vs static paths
-
-### Milestone 2 Checklist
-- [ ] ✅ Skill assessment on every signup
-- [ ] ✅ Personalized paths being generated
-- [ ] ✅ Spaced repetition pushing reviews
-- [ ] ✅ AI Tutor responding contextually
-- [ ] ✅ Measured improvement in quiz scores (adaptive users)
 
 ---
 
-## Phase 3: Integrated Coding Environment (Weeks 13–18)
+## Phase 3: Integrated Coding Environment (Weeks 13-18)
 *Goal: Learn by doing without leaving the platform*
 
-### Week 13: Editor Foundation
+### Week 13-14: Editor Enhancement
 - [ ] Evaluate: WebContainers vs Monaco + Judge0
-- [ ] Integrate Monaco Editor (React island)
+- [ ] Integrate Monaco Editor (replace textarea)
 - [ ] Multi-file support
-- [ ] Syntax highlighting (all target languages)
-- [ ] Editor themes matching design system
+- [ ] Terminal emulation
 
-### Week 14: JavaScript/TypeScript Runtime
-- [ ] WebContainers integration OR iframe sandbox
-- [ ] Console output capture
-- [ ] Error display with line highlighting
-- [ ] Auto-save to localStorage
-- [ ] Terminal emulation (optional)
-
-### Week 15: Python & Other Languages
+### Week 15: Multi-Language Runtime
 - [ ] Pyodide (WASM) for Python
 - [ ] Judge0 API integration for other languages
 - [ ] Language switcher UI
-- [ ] Output format standardization
 
-### Week 16: Project Templates
-- [ ] Template schema design
-- [ ] Starter code per project
-- [ ] Test file format (assertions)
-- [ ] Expected output definitions
-- [ ] Template gallery UI
-
-### Week 17: Auto-Grading & AI Review
-- [ ] Test runner implementation
-- [ ] Pass/fail status display
+### Week 16-17: Auto-Grading & AI Review
+- [ ] Real test runner implementation
 - [ ] Claude code review integration
 - [ ] Suggestion annotations in editor
 - [ ] Improvement scoring
@@ -196,220 +186,46 @@ Overall Progress           [█░░░░░░░░░] 7%
 ### Week 18: Version Control & Portfolio
 - [ ] Save checkpoints (snapshots)
 - [ ] Diff view component
-- [ ] Rollback functionality
 - [ ] "Completed projects" portfolio view
 - [ ] Public project sharing
 
-### Milestone 3 Checklist
-- [ ] ✅ Code editor working for JS/TS/Python
-- [ ] ✅ At least 20 project templates seeded
-- [ ] ✅ Auto-grading functional
-- [ ] ✅ AI code review providing feedback
-- [ ] ✅ >50% of users complete at least one project
-
 ---
 
-## Phase 4: Gamification & Social (Weeks 19–24)
+## Phase 4: Gamification & Social (Weeks 19-24)
 *Goal: Engagement loops that drive retention*
 
-### Week 19: XP & Leveling System
-- [ ] XP award rules:
-  - [ ] Node completion: +10-50 XP (by difficulty)
-  - [ ] Quiz passed: +25 XP
-  - [ ] Project completed: +100-500 XP
-  - [ ] Streak bonus: +multiplier
-- [ ] Level thresholds (Novice → Legend)
-- [ ] Level badge icons
-- [ ] XP transaction history
-
-### Week 20: Streaks & Achievements
-- [ ] Daily/weekly streak tracking
-- [ ] Streak shield (premium feature)
-- [ ] Achievement catalog design:
-  - [ ] First Node Completed
-  - [ ] 7-Day Streak
-  - [ ] First Project Submitted
-  - [ ] 100 Nodes Mastered
-  - [ ] Mentor Session Completed
-  - [ ] (30+ achievements)
-- [ ] Achievement unlock notifications
-- [ ] Achievement showcase on profile
-
-### Week 21: Leaderboards
-- [ ] Database schema for rankings
-- [ ] Weekly/monthly/all-time boards
-- [ ] Per-roadmap leaderboards
-- [ ] Global leaderboard
-- [ ] Ranking calculation job (cron)
-- [ ] Leaderboard UI with pagination
-
-### Week 22: Daily Challenges
-- [ ] Challenge generator (AI-assisted)
-- [ ] Challenge types:
-  - [ ] Micro-quiz
-  - [ ] Code snippet fix
-  - [ ] Timed coding challenge
-- [ ] Challenge calendar view
-- [ ] Bonus XP for completion
-
-### Week 23: Multiplayer Features
+- [ ] XP & leveling system (rules engine)
+- [ ] Streaks & achievements (30+ badges)
+- [ ] Leaderboards (real-time ranking calculation)
+- [ ] Daily challenges (AI-generated)
 - [ ] Code battles (timed 1v1)
-- [ ] WebRTC integration (pair programming)
-- [ ] Shared editor state (CRDT/Yjs)
-- [ ] Team challenges (async)
-- [ ] Matchmaking system
-
-### Week 24: Social Profiles
-- [ ] Follow/follower system
-- [ ] Activity feed
-- [ ] Skill endorsements
-- [ ] Mentor badge & mentor directory
-- [ ] Mentorship request system
-
-### Milestone 4 Checklist
-- [ ] ✅ XP and levels visible on all profiles
-- [ ] ✅ Streak tracking working
-- [ ] ✅ Leaderboards populated and updating
-- [ ] ✅ Daily challenges generating
-- [ ] ✅ Week-2 retention >40%
+- [ ] Social profiles, follows, activity feed
+- [ ] Mentor badge & directory
 
 ---
 
-## Phase 5: Career Integration (Weeks 25–30)
+## Phase 5: Career Integration (Weeks 25-30)
 *Goal: Connect learning to real outcomes*
 
-### Week 25: Skill Verification
-- [ ] Proctored challenge mode
-- [ ] Verification badge design
-- [ ] Anti-cheat measures
-- [ ] Badge display on profile
-- [ ] Badge verification URL (public)
-
-### Week 26: Digital Credentials
-- [ ] Certificate generator (PDF + image)
-- [ ] Unique verification codes
-- [ ] LinkedIn share integration
-- [ ] Certificate gallery page
-- [ ] Employer verification portal
-
-### Week 27: Portfolio Generator
-- [ ] Auto-extract completed projects
-- [ ] Portfolio template selection
-- [ ] Custom subdomain (username.devpath.io)
-- [ ] Portfolio customization options
-- [ ] SEO optimization for portfolios
-
-### Week 28: Resume Builder
-- [ ] Skill keyword extraction
-- [ ] Project description generation (AI)
-- [ ] Resume template selection
-- [ ] PDF/DOCX export
-- [ ] ATS-friendly formatting
-
-### Week 29: Job Board Integration
-- [ ] API integration: Indeed, LinkedIn, Adzuna
-- [ ] Job ↔ skill matching algorithm
-- [ ] "Skills needed" overlay on job cards
-- [ ] Job recommendations based on skill graph
-- [ ] Application tracking (kanban board)
-
-### Week 30: Interview Prep & Career Simulator
-- [ ] AI mock interview system
-- [ ] Interview feedback and scoring
-- [ ] "What if I learned X?" projections
-- [ ] Employer dashboard (B2B beta)
-- [ ] Company skill gap analysis
-
-### Milestone 5 Checklist
-- [ ] ✅ Verified badges being issued
-- [ ] ✅ Portfolios publicly accessible
-- [ ] ✅ Jobs appearing with skill match scores
-- [ ] ✅ Resume builder functional
-- [ ] ✅ First job placement attributed to platform
+- [ ] Skill verification (proctored challenges)
+- [ ] Digital credentials (PDF certificates)
+- [ ] Portfolio generator (subdomain: user.devpath.io)
+- [ ] Resume builder (AI-powered)
+- [ ] Job board integration (Indeed, LinkedIn, Adzuna)
+- [ ] AI mock interviews
 
 ---
 
-## Phase 6: Polish & Scale (Weeks 31–36)
+## Phase 6: Polish & Scale (Weeks 31-36)
 *Goal: Production hardening, monetization, growth*
 
-### Week 31: Mobile & Performance
-- [ ] Mobile responsiveness audit
 - [ ] PWA manifest and service worker
 - [ ] Core Web Vitals optimization
-- [ ] Bundle splitting and lazy loading
-- [ ] Edge caching configuration
-- [ ] Image optimization pipeline
-
-### Week 32: Monetization
-- [ ] Stripe integration
-- [ ] Subscription tiers:
-  - [ ] **Free**: 3 roadmaps, limited AI, basic progress
-  - [ ] **Pro ($12/mo)**: All roadmaps, unlimited AI, spaced repetition, analytics
-  - [ ] **Teams ($29/seat)**: Admin dashboard, skill gap analysis, team insights
-- [ ] Upgrade/downgrade flows
-- [ ] Invoice and billing portal
-- [ ] Trial period implementation
-
-### Week 33: Analytics Dashboard
-- [ ] User analytics views:
-  - [ ] Learning velocity
-  - [ ] Time spent per topic
-  - [ ] Skill growth over time
-  - [ ] Weak spots identification
-- [ ] Admin analytics (business metrics)
-- [ ] Event tracking (Plausible/PostHog)
-
-### Week 34: Notifications & Engagement
-- [ ] Email notification system
-- [ ] Push notifications (web)
-- [ ] Notification preferences
-- [ ] Spaced repetition reminders
-- [ ] Streak warning emails
-- [ ] Weekly progress digest
-
-### Week 35: Community & Moderation
-- [ ] Report/flag system
-- [ ] Moderation queue
-- [ ] Community guidelines
-- [ ] Ban/suspend functionality
-- [ ] Content review workflow
-
-### Week 36: Launch Prep
-- [ ] SEO audit and optimization
-- [ ] Structured data (JSON-LD)
-- [ ] Landing page A/B testing
-- [ ] Conversion tracking setup
-- [ ] Launch announcement campaign
-- [ ] Documentation and help center
-
-### Milestone 6 Checklist
-- [ ] ✅ Mobile experience polished
-- [ ] ✅ Stripe payments working
-- [ ] ✅ First paying customers
-- [ ] ✅ NPS score >50
-- [ ] ✅ Load tested for 10K concurrent users
-
----
-
-## Backlog (Post-Launch)
-
-### Features for v2
-- [ ] Native mobile app (React Native / Expo)
-- [ ] Course creation marketplace
-- [ ] Live coding workshops
-- [ ] Company-branded learning portals
-- [ ] API for third-party integrations
-- [ ] Slack/Discord integrations
-- [ ] Offline mode (downloaded content)
-- [ ] Multi-language support (i18n)
-
-### Technical Debt
-- [ ] Comprehensive test coverage (>80%)
-- [ ] E2E test suite (Playwright)
-- [ ] CI/CD pipeline optimization
-- [ ] Database indexing audit
-- [ ] Security penetration testing
-- [ ] GDPR/privacy compliance audit
+- [ ] Stripe integration (subscription billing)
+- [ ] Analytics dashboard (user + admin)
+- [ ] Notification system (email + push)
+- [ ] Community moderation tools
+- [ ] Launch prep (SEO, structured data, campaigns)
 
 ---
 
@@ -419,29 +235,24 @@ Overall Progress           [█░░░░░░░░░] 7%
 |------|----------|-----------|
 | 2026-02-10 | Use Astro + Islands over Next.js | SEO-friendly SSG, matches roadmap.sh architecture |
 | 2026-02-10 | Supabase for backend | Solo dev needs speed; auth+DB+realtime out of box |
-| 2026-02-10 | Hybrid AI (Claude API + local embeddings) | Balance quality with cost |
+| 2026-02-10 | Hybrid AI (Claude API + local) | Balance quality with cost |
 | 2026-02-10 | Freemium model | Maximizes reach, proven for dev tools |
+| 2026-02-10 | Lazy Proxy for Supabase client | Avoids SSG build errors when env vars missing |
+| 2026-02-10 | client:load over createRoot | Manual createRoot causes Vite preamble errors |
 
 ---
 
-## Resources
+## Backlog (Post-Launch)
 
-- [Astro Docs](https://docs.astro.build)
-- [Supabase Docs](https://supabase.com/docs)
-- [Monaco Editor](https://microsoft.github.io/monaco-editor/)
-- [WebContainers](https://webcontainers.io/)
-- [Anthropic Claude API](https://docs.anthropic.com/)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [SM-2 Algorithm](https://www.supermemo.com/en/archives1990-2015/english/ol/sm2)
-
----
-
-## Notes
-
-_Use this section for meeting notes, ideas, and observations._
-
-- 
+- [ ] Native mobile app (React Native / Expo)
+- [ ] Course creation marketplace
+- [ ] Live coding workshops
+- [ ] Company-branded learning portals
+- [ ] API for third-party integrations
+- [ ] Slack/Discord integrations
+- [ ] Offline mode
+- [ ] Multi-language support (i18n)
 
 ---
 
-**Last Updated**: February 10, 2026
+**Last Updated**: Session 2
