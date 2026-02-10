@@ -1,0 +1,12 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import ProfileDashboard from '../components/profile/ProfileDashboard';
+---
+
+<PageLayout title="Profile" description="Your DevPath learning profile, progress, and achievements">
+  <section class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <ProfileDashboard client:load />
+    </div>
+  </section>
+</PageLayout>

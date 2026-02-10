@@ -1,10 +1,11 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
 import type { RoadmapData, RoadmapNode, NodeStatus } from "../../data/types";
 import { categoryColors, difficultyConfig } from "../../data/types";
 import Badge from "../ui/Badge";
 import Button from "../ui/Button";
+import { ZoomIn, ZoomOut, Maximize2, Minus } from "lucide-react";
 
 interface RoadmapViewerProps {
   roadmap: RoadmapData;
@@ -15,6 +16,67 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
     {},
   );
   const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null);
+
+  // Zoom & Pan state
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+  const canvasRef = useRef<HTMLDivElement>(null);
+
+  const MIN_ZOOM = 0.3;
+  const MAX_ZOOM = 2;
+  const ZOOM_STEP = 0.15;
+
+  const handleZoomIn = useCallback(() => {
+    setZoom((z) => Math.min(MAX_ZOOM, z + ZOOM_STEP));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setZoom((z) => Math.max(MIN_ZOOM, z - ZOOM_STEP));
+  }, []);
+
+  const handleResetView = useCallback(() => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  }, []);
+
+  // Mouse wheel zoom
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -ZOOM_STEP : ZOOM_STEP;
+      setZoom((z) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, z + delta)));
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
+  // Panning handlers
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      // Only pan on middle-click or when background is clicked
+      if (e.button === 1 || (e.target as HTMLElement).tagName === "svg" || (e.target as HTMLElement).closest(".roadmap-canvas-bg")) {
+        setIsPanning(true);
+        panStart.current = { x: e.clientX, y: e.clientY, panX: pan.x, panY: pan.y };
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      }
+    },
+    [pan],
+  );
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isPanning) return;
+    const dx = e.clientX - panStart.current.x;
+    const dy = e.clientY - panStart.current.y;
+    setPan({ x: panStart.current.panX + dx, y: panStart.current.panY + dy });
+  }, [isPanning]);
+
+  const handlePointerUp = useCallback(() => {
+    setIsPanning(false);
+  }, []);
 
   // Compute node positions for a vertical flow layout
   const layoutNodes = useMemo(() => {
@@ -115,6 +177,69 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
     });
   }, []);
 
+  // Keyboard navigation
+  const [focusedNodeIndex, setFocusedNodeIndex] = useState(-1);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+
+      switch (e.key) {
+        case '+':
+        case '=':
+          e.preventDefault();
+          handleZoomIn();
+          break;
+        case '-':
+        case '_':
+          e.preventDefault();
+          handleZoomOut();
+          break;
+        case '0':
+          e.preventDefault();
+          handleResetView();
+          break;
+        case 'ArrowDown':
+        case 'j': {
+          e.preventDefault();
+          setFocusedNodeIndex((prev) => {
+            const next = Math.min(prev + 1, layoutNodes.length - 1);
+            setSelectedNode(layoutNodes[next] || null);
+            return next;
+          });
+          break;
+        }
+        case 'ArrowUp':
+        case 'k': {
+          e.preventDefault();
+          setFocusedNodeIndex((prev) => {
+            const next = Math.max(prev - 1, 0);
+            setSelectedNode(layoutNodes[next] || null);
+            return next;
+          });
+          break;
+        }
+        case 'Enter':
+        case ' ': {
+          if (focusedNodeIndex >= 0 && focusedNodeIndex < layoutNodes.length) {
+            e.preventDefault();
+            toggleNodeStatus(layoutNodes[focusedNodeIndex].id);
+          }
+          break;
+        }
+        case 'Escape': {
+          setSelectedNode(null);
+          setFocusedNodeIndex(-1);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [focusedNodeIndex, handleZoomIn, handleZoomOut, handleResetView, layoutNodes, toggleNodeStatus]);
+
   const completedCount = Object.values(nodeStatuses).filter(
     (s) => s === "completed",
   ).length;
@@ -166,13 +291,56 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
       </div>
 
       {/* Roadmap Canvas */}
-      <div className="relative bg-abyss rounded-2xl border border-white/5 overflow-x-auto">
+      <div
+        ref={canvasRef}
+        className="relative bg-abyss rounded-2xl border border-white/5 overflow-hidden select-none"
+        style={{ cursor: isPanning ? 'grabbing' : 'grab' }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+      >
         <div className="dot-grid absolute inset-0 opacity-30 pointer-events-none" />
+
+        {/* Zoom Controls */}
+        <div className="absolute top-4 right-4 z-10 flex flex-col gap-1">
+          <button
+            onClick={handleZoomIn}
+            className="p-2 rounded-lg bg-[var(--color-obsidian)]/80 backdrop-blur-sm border border-white/[0.08] text-[var(--color-silver)] hover:text-white hover:border-white/20 transition-all"
+            title="Zoom in"
+          >
+            <ZoomIn size={16} />
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="p-2 rounded-lg bg-[var(--color-obsidian)]/80 backdrop-blur-sm border border-white/[0.08] text-[var(--color-silver)] hover:text-white hover:border-white/20 transition-all"
+            title="Zoom out"
+          >
+            <ZoomOut size={16} />
+          </button>
+          <button
+            onClick={handleResetView}
+            className="p-2 rounded-lg bg-[var(--color-obsidian)]/80 backdrop-blur-sm border border-white/[0.08] text-[var(--color-silver)] hover:text-white hover:border-white/20 transition-all"
+            title="Reset view"
+          >
+            <Maximize2 size={16} />
+          </button>
+        </div>
+
+        {/* Zoom level indicator */}
+        <div className="absolute bottom-4 right-4 z-10 px-2.5 py-1 rounded-md bg-[var(--color-obsidian)]/80 backdrop-blur-sm border border-white/[0.08] text-xs font-mono text-[var(--color-steel)]">
+          {Math.round(zoom * 100)}%
+        </div>
 
         <svg
           viewBox={`${minX} -30 ${viewWidth} ${viewHeight}`}
-          className="w-full min-w-[600px]"
-          style={{ height: `${Math.max(viewHeight + 40, 400)}px` }}
+          className="w-full min-w-[600px] roadmap-canvas-bg"
+          style={{
+            height: `${Math.max(viewHeight + 40, 400)}px`,
+            transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
+            transformOrigin: 'center center',
+            transition: isPanning ? 'none' : 'transform 0.15s ease-out',
+          }}
         >
           {/* Edges */}
           {edgePaths.map(
@@ -206,8 +374,11 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
               <g
                 key={node.id}
                 transform={`translate(${node.layoutX - 90}, ${node.layoutY - 24})`}
-                className="cursor-pointer"
-                onClick={() => setSelectedNode(node)}
+                className={clsx('cursor-pointer', layoutNodes.indexOf(node) === focusedNodeIndex && 'focused-node')}
+                onClick={() => {
+                  setSelectedNode(node);
+                  setFocusedNodeIndex(layoutNodes.indexOf(node));
+                }}
                 role="button"
                 tabIndex={0}
               >
@@ -230,9 +401,24 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
                         ? "#f0a030"
                         : "rgba(255,255,255,0.08)"
                   }
-                  strokeWidth="1.5"
+                  strokeWidth={layoutNodes.indexOf(node) === focusedNodeIndex ? "2.5" : "1.5"}
                   className="transition-all duration-300"
                 />
+                {/* Focus ring for keyboard nav */}
+                {layoutNodes.indexOf(node) === focusedNodeIndex && (
+                  <rect
+                    width="184"
+                    height="52"
+                    x="-2"
+                    y="-2"
+                    rx="14"
+                    fill="none"
+                    stroke="#00e5a0"
+                    strokeWidth="2"
+                    strokeDasharray="4 2"
+                    opacity="0.6"
+                  />
+                )}
 
                 {/* Status Indicator */}
                 <circle
@@ -446,7 +632,7 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
           <span className="text-xs text-dim">Completed</span>
         </div>
         <div className="ml-auto text-xs text-muted">
-          Click a node to see details • Click status circle to toggle progress
+          Click a node to see details • Scroll to zoom • Drag to pan • <kbd className="px-1 py-0.5 rounded bg-white/[0.06] border border-white/10 font-mono">↑↓</kbd> navigate
         </div>
       </div>
     </div>
