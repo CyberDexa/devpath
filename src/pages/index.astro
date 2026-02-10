@@ -164,6 +164,89 @@ import { allRoadmaps } from "../data/roadmaps";
     </div>
   </section>
 
+  <!-- Code Editor Preview Section -->
+  <section class="relative py-24 lg:py-32 bg-abyss border-y border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky/10 border border-sky/20 text-sky text-xs font-medium mb-6">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Built-in IDE
+          </div>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl text-bright mb-4">
+            Code where you <span class="text-gradient">learn</span>
+          </h2>
+          <p class="text-dim text-lg leading-relaxed mb-8">
+            No more switching between tutorials and your editor. Write, run, and test code directly in the browser with our fullfeature IDE.
+          </p>
+          <div class="space-y-4">
+            {[
+              { icon: "▶", label: "Run code instantly", desc: "Execute with one click" },
+              { icon: "🧪", label: "Automated test suites", desc: "Validate your solution" },
+              { icon: "✨", label: "AI code review", desc: "Get instant feedback" },
+              { icon: "⌨️", label: "Real keybindings", desc: "Tab, bracket matching, shortcuts" },
+            ].map((item) => (
+              <div class="flex items-start gap-3">
+                <span class="w-8 h-8 rounded-lg bg-surface border border-white/8 flex items-center justify-center text-sm flex-shrink-0">{item.icon}</span>
+                <div>
+                  <p class="text-text font-medium text-sm">{item.label}</p>
+                  <p class="text-dim text-xs">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <a href="/projects" class="inline-flex items-center gap-2 mt-8 text-teal font-medium hover:text-teal-dim transition-colors">
+            Browse challenges
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <!-- Code Editor Mock -->
+        <div class="rounded-2xl bg-surface border border-white/8 overflow-hidden shadow-elevated">
+          <div class="flex items-center gap-2 px-4 py-2.5 border-b border-white/5 bg-white/2">
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 rounded-full bg-rose/50"></div>
+              <div class="w-3 h-3 rounded-full bg-amber/50"></div>
+              <div class="w-3 h-3 rounded-full bg-teal/50"></div>
+            </div>
+            <div class="flex items-center gap-2 ml-3">
+              <div class="px-3 py-1 rounded-md bg-abyss border border-white/5 text-xs font-mono text-dim">solution.tsx</div>
+            </div>
+            <div class="ml-auto flex items-center gap-1.5">
+              <span class="px-2.5 py-0.5 rounded-md text-[10px] font-medium bg-teal/10 text-teal border border-teal/20">▶ Run</span>
+              <span class="px-2.5 py-0.5 rounded-md text-[10px] font-medium bg-violet/10 text-violet border border-violet/20">🧪 Test</span>
+              <span class="px-2.5 py-0.5 rounded-md text-[10px] font-medium bg-amber/10 text-amber border border-amber/20">✨ AI</span>
+            </div>
+          </div>
+          <div class="p-5 font-mono text-sm leading-relaxed">
+            <div><span class="text-violet">function</span> <span class="text-sky">LRUCache</span>(<span class="text-amber">capacity</span>) {'{'}</div>
+            <div class="pl-6"><span class="text-violet">this</span>.capacity = capacity;</div>
+            <div class="pl-6"><span class="text-violet">this</span>.cache = <span class="text-violet">new</span> <span class="text-sky">Map</span>();</div>
+            <div>{'}'}</div>
+            <div class="mt-2"><span class="text-dim">// O(1) get operation</span></div>
+            <div>LRUCache.prototype.<span class="text-sky">get</span> = <span class="text-violet">function</span>(<span class="text-amber">key</span>) {'{'}</div>
+            <div class="pl-6"><span class="text-violet">if</span> (!<span class="text-violet">this</span>.cache.<span class="text-sky">has</span>(key)) <span class="text-violet">return</span> <span class="text-rose">-1</span>;</div>
+            <div class="pl-6"><span class="text-violet">const</span> val = <span class="text-violet">this</span>.cache.<span class="text-sky">get</span>(key);</div>
+            <div class="pl-6"><span class="text-violet">this</span>.cache.<span class="text-sky">delete</span>(key);</div>
+            <div class="pl-6"><span class="text-violet">this</span>.cache.<span class="text-sky">set</span>(key, val);</div>
+            <div class="pl-6"><span class="text-violet">return</span> val;</div>
+            <div>{'}'};</div>
+          </div>
+          <div class="border-t border-white/5 px-4 py-2.5 flex items-center gap-3 text-xs">
+            <span class="flex items-center gap-1.5 text-teal">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              6/6 tests passed
+            </span>
+            <span class="text-muted">|</span>
+            <span class="text-dim">12ms</span>
+            <span class="text-muted">|</span>
+            <span class="text-dim">1.2MB</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Roadmaps Preview -->
   <section class="relative py-24 lg:py-32 bg-abyss border-y border-white/5">
     <div class="max-w-7xl mx-auto px-6">
@@ -294,6 +377,114 @@ import { allRoadmaps } from "../data/roadmaps";
             </div>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="relative py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bright mb-4">
+          Three steps to level up
+        </h2>
+        <p class="text-dim text-lg max-w-xl mx-auto">
+          From zero to job-ready with a clear, measurable path.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          {
+            step: "01",
+            title: "Pick a Roadmap",
+            desc: "Choose from expertly-crafted paths for frontend, backend, full stack, DevOps, AI/ML, and more. The AI customizes it to your level.",
+            icon: "🗺️",
+            color: "teal",
+          },
+          {
+            step: "02",
+            title: "Learn & Build",
+            desc: "Study each topic with curated resources, then prove mastery by solving hands-on coding challenges in our built-in IDE.",
+            icon: "⚡",
+            color: "amber",
+          },
+          {
+            step: "03",
+            title: "Earn & Grow",
+            desc: "Collect XP, badges, and streak rewards. Build a verified skill profile that showcases your abilities to employers.",
+            icon: "🏆",
+            color: "violet",
+          },
+        ].map((step) => (
+          <div class="relative rounded-xl bg-surface border border-white/5 p-8 hover:border-teal/15 transition-all group">
+            <span class="absolute -top-4 -left-2 text-6xl font-display font-black text-white/3 group-hover:text-teal/8 transition-colors">{step.step}</span>
+            <div class="relative">
+              <span class="text-3xl mb-4 block">{step.icon}</span>
+              <h3 class="font-display font-bold text-bright text-xl mb-3">{step.title}</h3>
+              <p class="text-dim leading-relaxed">{step.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="relative py-24 lg:py-32 bg-abyss border-y border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bright mb-4">
+          Loved by developers
+        </h2>
+        <p class="text-dim text-lg">Real feedback from our community.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          {
+            quote: "DevPath's adaptive AI roadmaps cut my learning time in half. I went from junior to mid-level in 8 months instead of the 18 I was expecting.",
+            name: "Sarah Chen",
+            role: "Frontend Developer @ Vercel",
+            avatar: "SC",
+            color: "#00e5a0",
+          },
+          {
+            quote: "The built-in code editor with automated tests is a game changer. I practice algorithms, get instant feedback, and earn XP — it's addictive in the best way.",
+            name: "Marcus Johnson",
+            role: "Backend Engineer @ Stripe",
+            avatar: "MJ",
+            color: "#38bdf8",
+          },
+          {
+            quote: "I used to bounce between 10 tutorial sites. Now everything I need — roadmaps, coding, AI tutor, career advice — is in one place. DevPath is it.",
+            name: "Ayumi Tanaka",
+            role: "Full Stack Dev @ Shopify",
+            avatar: "AT",
+            color: "#8855ff",
+          },
+        ].map((testimonial) => (
+          <div class="rounded-xl bg-surface border border-white/5 p-6 hover:border-white/10 transition-all">
+            <div class="flex gap-0.5 mb-4">
+              {Array(5).fill(null).map(() => (
+                <svg class="w-4 h-4 text-amber" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              ))}
+            </div>
+            <p class="text-text text-sm leading-relaxed mb-6">"{testimonial.quote}"</p>
+            <div class="flex items-center gap-3 pt-4 border-t border-white/5">
+              <div
+                class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-void"
+                style={`background-color: ${testimonial.color}`}
+              >
+                {testimonial.avatar}
+              </div>
+              <div>
+                <p class="text-text font-medium text-sm">{testimonial.name}</p>
+                <p class="text-dim text-xs">{testimonial.role}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
