@@ -77,49 +77,94 @@ const currentPath = Astro.url.pathname;
 
       <!-- Mobile menu button -->
       <button
-        class="md:hidden p-2 text-dim hover:text-text transition-colors"
-        aria-label="Open menu"
+        class="md:hidden p-2 text-dim hover:text-text transition-colors relative z-50"
+        aria-label="Toggle menu"
+        aria-expanded="false"
         id="mobile-menu-toggle"
       >
+        <!-- Hamburger icon -->
         <svg
+          id="menu-icon-open"
           width="20"
           height="20"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           stroke-width="2"
+          class="transition-transform duration-200"
         >
           <path d="M3 12h18M3 6h18M3 18h18" />
+        </svg>
+        <!-- Close icon -->
+        <svg
+          id="menu-icon-close"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="hidden transition-transform duration-200"
+        >
+          <path d="M18 6L6 18M6 6l12 12" />
         </svg>
       </button>
     </div>
   </div>
 
-  <!-- Mobile Navigation -->
+  <!-- Mobile Navigation Overlay -->
+  <div
+    id="mobile-menu-backdrop"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden opacity-0 transition-opacity duration-300"
+  ></div>
+
+  <!-- Mobile Navigation Panel -->
   <div
     id="mobile-menu"
-    class="hidden md:hidden glass-strong border-t border-white/5"
+    class="fixed top-16 left-0 right-0 z-40 md:hidden overflow-hidden transition-all duration-300 ease-out"
+    style="max-height: 0; opacity: 0;"
   >
-    <nav class="px-6 py-4 flex flex-col gap-1">
-      {
-        navLinks.map((link) => {
-          const isActive = currentPath.startsWith(link.href);
-          return (
-            <a
-              href={link.href}
-              class:list={[
-                "px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                isActive
-                  ? "text-teal bg-teal/8"
-                  : "text-dim hover:text-text hover:bg-white/4",
-              ]}
-            >
-              {link.label}
-            </a>
-          );
-        })
-      }
-    </nav>
+    <div class="glass-strong border-t border-white/5 shadow-2xl">
+      <nav class="px-6 py-4 flex flex-col gap-1">
+        {
+          navLinks.map((link) => {
+            const isActive = currentPath.startsWith(link.href);
+            return (
+              <a
+                href={link.href}
+                class:list={[
+                  "mobile-nav-link px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-3",
+                  isActive
+                    ? "text-teal bg-teal/8 border border-teal/10"
+                    : "text-dim hover:text-text hover:bg-white/4 border border-transparent",
+                ]}
+              >
+                {link.label}
+                {isActive && (
+                  <span class="ml-auto w-1.5 h-1.5 rounded-full bg-teal"></span>
+                )}
+              </a>
+            );
+          })
+        }
+      </nav>
+
+      <!-- Mobile auth section -->
+      <div class="px-6 pb-5 pt-2 border-t border-white/5 mt-1 flex flex-col gap-2">
+        <a
+          href="/login"
+          class="w-full text-center px-4 py-3 rounded-xl text-sm font-medium text-dim hover:text-text hover:bg-white/4 transition-all border border-[var(--color-charcoal)]"
+        >
+          Log in
+        </a>
+        <a
+          href="/signup"
+          class="w-full text-center px-4 py-3 rounded-xl text-sm font-semibold bg-teal text-void hover:bg-teal-dim transition-colors shadow-glow"
+        >
+          Get Started — It's Free
+        </a>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -127,9 +172,61 @@ const currentPath = Astro.url.pathname;
 <div class="h-16"></div>
 
 <script>
-  const toggle = document.getElementById("mobile-menu-toggle");
-  const menu = document.getElementById("mobile-menu");
-  toggle?.addEventListener("click", () => {
-    menu?.classList.toggle("hidden");
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const backdrop = document.getElementById('mobile-menu-backdrop');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+  let isOpen = false;
+
+  function openMenu() {
+    isOpen = true;
+    toggle?.setAttribute('aria-expanded', 'true');
+    iconOpen?.classList.add('hidden');
+    iconClose?.classList.remove('hidden');
+    backdrop?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(() => {
+      if (backdrop) backdrop.style.opacity = '1';
+      if (menu) {
+        menu.style.maxHeight = '80vh';
+        menu.style.opacity = '1';
+      }
+    });
+  }
+
+  function closeMenu() {
+    isOpen = false;
+    toggle?.setAttribute('aria-expanded', 'false');
+    iconOpen?.classList.remove('hidden');
+    iconClose?.classList.add('hidden');
+    document.body.style.overflow = '';
+
+    if (backdrop) backdrop.style.opacity = '0';
+    if (menu) {
+      menu.style.maxHeight = '0';
+      menu.style.opacity = '0';
+    }
+
+    setTimeout(() => {
+      backdrop?.classList.add('hidden');
+    }, 300);
+  }
+
+  toggle?.addEventListener('click', () => {
+    isOpen ? closeMenu() : openMenu();
+  });
+
+  backdrop?.addEventListener('click', closeMenu);
+
+  // Close on ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen) closeMenu();
+  });
+
+  // Close on resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768 && isOpen) closeMenu();
   });
 </script>

@@ -1,0 +1,10 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { SettingsPanel } from '../components/settings/SettingsPanel';
+---
+
+<PageLayout title="Settings" description="Manage your DevPath account, preferences, and privacy settings.">
+  <div class="min-h-screen">
+    <SettingsPanel client:load />
+  </div>
+</PageLayout>
