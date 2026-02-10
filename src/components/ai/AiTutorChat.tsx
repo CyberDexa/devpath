@@ -173,19 +173,8 @@ function TypingIndicator() {
   );
 }
 
-// Simulated AI responses
-const aiResponses: Record<string, string> = {
-  'default': `Great question! Let me help you with that.\n\nHere's a brief explanation:\n\n1. **Understand the concept** — Break it down into smaller pieces\n2. **Practice with examples** — The best way to learn is by doing\n3. **Build a project** — Apply your knowledge in a real-world scenario\n\nWould you like me to dive deeper into any of these areas?`,
-  'react': `**React Hooks** are functions that let you use state and other React features in functional components.\n\nHere's a quick example of \`useState\`:\n\n\`\`\`typescript\nimport { useState } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  \n  return (\n    <button onClick={() => setCount(c => c + 1)}>\n      Count: {count}\n    </button>\n  );\n}\n\`\`\`\n\nKey hooks to learn:\n- \`useState\` — Manage local state\n- \`useEffect\` — Handle side effects\n- \`useCallback\` — Memoize functions\n- \`useMemo\` — Memoize values\n- \`useRef\` — Persist values without re-renders\n\nWant me to explain any of these in detail?`,
-  'api': `**REST API Best Practices:**\n\n1. **Use proper HTTP methods** — GET, POST, PUT, DELETE, PATCH\n2. **Consistent naming** — Use plural nouns: \`/users\`, \`/posts\`\n3. **Version your API** — \`/api/v1/users\`\n4. **Proper status codes** — 200, 201, 400, 404, 500\n5. **Pagination** — Always paginate list endpoints\n\n\`\`\`typescript\n// Express example\napp.get('/api/v1/users', async (req, res) => {\n  const { page = 1, limit = 20 } = req.query;\n  const users = await User.findAll({\n    offset: (page - 1) * limit,\n    limit,\n  });\n  res.json({ data: users, page, limit });\n});\n\`\`\`\n\nShall I go deeper into authentication or error handling?`,
-};
-
-function getAIResponse(input: string): string {
-  const lower = input.toLowerCase();
-  if (lower.includes('react') || lower.includes('hook')) return aiResponses.react;
-  if (lower.includes('api') || lower.includes('rest')) return aiResponses.api;
-  return aiResponses.default;
-}
+// Simulated AI responses removed — now using lib/ai-tutor service
+import { sendTutorMessage, type ChatMessage } from '../../lib/ai-tutor';
 
 export function AiTutorChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -194,6 +183,7 @@ export function AiTutorChat() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [conversations, setConversations] = useState(mockConversations);
   const [questionsToday, setQuestionsToday] = useState(7);
+  const [error, setError] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -218,20 +208,40 @@ export function AiTutorChat() {
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
+    setError('');
     setQuestionsToday((q) => q + 1);
 
-    // Simulate AI response delay
-    setTimeout(() => {
+    try {
+      // Build conversation history for the API
+      const chatHistory: ChatMessage[] = messages.map((m) => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+      }));
+      chatHistory.push({ role: 'user', content: content.trim() });
+
+      const response = await sendTutorMessage(chatHistory);
+
       const aiMsg: Message = {
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: getAIResponse(content),
+        content: response,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, aiMsg]);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to get a response. Please try again.');
+      // Still add a fallback message
+      const aiMsg: Message = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content: 'I encountered an error processing your request. Please try again in a moment.',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, aiMsg]);
+    } finally {
       setIsTyping(false);
-    }, 1200 + Math.random() * 1000);
-  }, []);
+    }
+  }, [messages]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
