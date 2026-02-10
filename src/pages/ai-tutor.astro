@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import { AiTutorChat } from '../components/ai/AiTutorChat';
+---
+
+<BaseLayout title="AI Tutor" description="Your personal AI programming tutor. Ask anything about code, concepts, or career.">
+  <Header />
+  <AiTutorChat client:load />
+</BaseLayout>
