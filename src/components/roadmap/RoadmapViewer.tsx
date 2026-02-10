@@ -5,16 +5,21 @@ import type { RoadmapData, RoadmapNode, NodeStatus } from "../../data/types";
 import { categoryColors, difficultyConfig } from "../../data/types";
 import Badge from "../ui/Badge";
 import Button from "../ui/Button";
-import { ZoomIn, ZoomOut, Maximize2, Minus } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize2, Minus, Cloud, CloudOff } from "lucide-react";
+import { useRoadmapProgress } from "../../hooks/useRoadmapProgress";
 
 interface RoadmapViewerProps {
   roadmap: RoadmapData;
 }
 
 export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
-  const [nodeStatuses, setNodeStatuses] = useState<Record<string, NodeStatus>>(
-    {},
-  );
+  const {
+    nodeStatuses,
+    updateNodeStatus,
+    toggleNodeStatus,
+    loaded,
+    isAuthenticated,
+  } = useRoadmapProgress(roadmap.id, roadmap.nodes.length);
   const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null);
 
   // Zoom & Pan state
@@ -164,19 +169,6 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
   const viewWidth = maxX - minX;
   const viewHeight = maxY + 60;
 
-  const toggleNodeStatus = useCallback((nodeId: string) => {
-    setNodeStatuses((prev) => {
-      const current = prev[nodeId] || "not-started";
-      const next: NodeStatus =
-        current === "not-started"
-          ? "learning"
-          : current === "learning"
-            ? "completed"
-            : "not-started";
-      return { ...prev, [nodeId]: next };
-    });
-  }, []);
-
   // Keyboard navigation
   const [focusedNodeIndex, setFocusedNodeIndex] = useState(-1);
 
@@ -273,6 +265,17 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          {/* Cloud sync indicator */}
+          <div className="flex items-center gap-1.5" title={isAuthenticated ? 'Progress synced to cloud' : 'Sign in to save progress'}>
+            {isAuthenticated ? (
+              <Cloud size={14} className="text-teal" />
+            ) : (
+              <CloudOff size={14} className="text-dim" />
+            )}
+            <span className="text-xs text-dim">
+              {isAuthenticated ? 'Synced' : 'Local only'}
+            </span>
+          </div>
           <div className="text-right">
             <div className="text-sm font-mono text-teal font-semibold">
               {progressPercent}%
@@ -598,10 +601,7 @@ export default function RoadmapViewer({ roadmap }: RoadmapViewerProps) {
                     variant={isActive ? "primary" : "secondary"}
                     size="sm"
                     onClick={() => {
-                      setNodeStatuses((prev) => ({
-                        ...prev,
-                        [selectedNode.id]: status,
-                      }));
+                      updateNodeStatus(selectedNode.id, status);
                     }}
                   >
                     {status === "not-started"

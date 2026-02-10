@@ -1,4 +1,6 @@
 ---
+import AuthHeader from './AuthHeader';
+
 const navLinks = [
   { href: "/roadmaps", label: "Roadmaps" },
   { href: "/projects", label: "Projects" },
@@ -60,20 +62,9 @@ const currentPath = Astro.url.pathname;
       }
     </nav>
 
-    <!-- Auth Buttons -->
-    <div class="flex items-center gap-3">
-      <a
-        href="/login"
-        class="hidden sm:inline-flex text-sm font-medium text-dim hover:text-text transition-colors duration-200"
-      >
-        Log in
-      </a>
-      <a
-        href="/signup"
-        class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold bg-teal text-void hover:bg-teal-dim transition-colors duration-200 shadow-glow"
-      >
-        Get Started
-      </a>
+    <!-- Auth Buttons (React Island — auth-aware) -->
+    <div class="flex items-center gap-3 relative">
+      <AuthHeader client:load />
 
       <!-- Mobile menu button -->
       <button

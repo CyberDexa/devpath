@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Header from "../../components/layout/Header.astro";
-import CodeEditor from "../../components/editor/CodeEditor";
+import ProjectEditor from "../../components/editor/ProjectEditor";
 import { allProjects } from "../../data/projects";
 
 export function getStaticPaths() {
@@ -165,11 +165,13 @@ const diffColor = diffColors[project.difficulty] || "#888";
 
         {/* Code Editor */}
         <div class="xl:col-span-3">
-          <CodeEditor
+          <ProjectEditor
             client:load
+            projectId={project.id}
             initialCode={project.starterCode}
             language={project.language}
             fileName={`solution.${project.language === 'typescript' ? 'tsx' : project.language === 'javascript' ? 'js' : project.language === 'python' ? 'py' : project.language}`}
+            xpReward={project.xpReward}
           />
         </div>
       </div>
