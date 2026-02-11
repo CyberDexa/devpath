@@ -1,0 +1,20 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import SharedProjectView from "../../components/portfolio/SharedProjectView";
+import { allProjects } from "../../data/projects";
+
+export function getStaticPaths() {
+  return allProjects.map((project) => ({
+    params: { id: project.id },
+    props: { projectId: project.id },
+  }));
+}
+
+const { projectId } = Astro.props;
+---
+
+<PageLayout title="Shared Project | DevPath">
+  <section class="pt-8 pb-16 min-h-screen">
+    <SharedProjectView client:load projectId={projectId} />
+  </section>
+</PageLayout>

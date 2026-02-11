@@ -2,7 +2,7 @@
 // DevPath — Monaco IDE Component
 // Full IDE with syntax highlighting,
 // real execution, test runner, AI review,
-// and version history
+// version history, multi-file & terminal
 // ═══════════════════════════════════════
 
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -60,6 +60,8 @@ import {
   type DiffLine,
 } from '../../lib/version-history';
 import { getProjectTests } from '../../data/project-tests';
+import FileExplorer, { FileTabBar, getLanguageFromPath, type ProjectFile } from './FileExplorer';
+import TerminalEmulator from './TerminalEmulator';
 
 // ═══════════════════════════════════════
 // Types
@@ -72,6 +74,9 @@ interface MonacoIDEProps {
   fileName?: string;
   onSubmit?: (code: string) => void;
   readOnly?: boolean;
+  multiFile?: boolean;
+  showTerminal?: boolean;
+  initialFiles?: ProjectFile[];
 }
 
 type TabKey = 'output' | 'tests' | 'ai-review' | 'history';
@@ -113,6 +118,9 @@ export default function MonacoIDE({
   fileName,
   onSubmit,
   readOnly = false,
+  multiFile = false,
+  showTerminal: showTerminalProp = false,
+  initialFiles,
 }: MonacoIDEProps) {
   // ── State ──
   const [code, setCode] = useState(initialCode);
@@ -138,6 +146,25 @@ export default function MonacoIDE({
   const [versions, setVersions] = useState<CodeVersion[]>([]);
   const [showDiff, setShowDiff] = useState<string | null>(null);
   const [diffLines, setDiffLines] = useState<DiffLine[]>([]);
+
+  // Multi-file state
+  const [showSidebar, setShowSidebar] = useState(multiFile);
+  const [showTerminal, setShowTerminal] = useState(showTerminalProp);
+  const [files, setFiles] = useState<ProjectFile[]>(
+    initialFiles || [
+      {
+        path: fileName || `solution.${fileExtension[language] || 'js'}`,
+        content: initialCode,
+        language,
+        isEntryPoint: true,
+      },
+    ]
+  );
+  const [activeFilePath, setActiveFilePath] = useState(
+    files[0]?.path || fileName || `solution.${fileExtension[language] || 'js'}`
+  );
+  const [openFilePaths, setOpenFilePaths] = useState<string[]>([activeFilePath]);
+  const [modifiedFiles, setModifiedFiles] = useState<Set<string>>(new Set());
 
   // Editor ref
   const editorRef = useRef<any>(null);
@@ -352,6 +379,86 @@ export default function MonacoIDE({
     setAiReview(null);
   }, [initialCode]);
 
+  // ── Multi-file handlers ──
+  const handleFileSelect = useCallback(
+    (path: string) => {
+      // Save current file state
+      setFiles((prev) =>
+        prev.map((f) => (f.path === activeFilePath ? { ...f, content: code } : f))
+      );
+      // Switch to selected file
+      const file = files.find((f) => f.path === path);
+      if (file) {
+        setActiveFilePath(path);
+        setCode(file.content);
+        editorRef.current?.setValue(file.content);
+        if (!openFilePaths.includes(path)) {
+          setOpenFilePaths((prev) => [...prev, path]);
+        }
+      }
+    },
+    [activeFilePath, code, files, openFilePaths]
+  );
+
+  const handleFileCreate = useCallback(
+    (path: string, lang: string) => {
+      const newFile: ProjectFile = { path, content: '', language: lang };
+      setFiles((prev) => [...prev, newFile]);
+      setActiveFilePath(path);
+      setOpenFilePaths((prev) => [...prev, path]);
+      setCode('');
+      editorRef.current?.setValue('');
+    },
+    []
+  );
+
+  const handleFileDelete = useCallback(
+    (path: string) => {
+      setFiles((prev) => prev.filter((f) => f.path !== path));
+      setOpenFilePaths((prev) => prev.filter((p) => p !== path));
+      if (activeFilePath === path) {
+        const remaining = files.filter((f) => f.path !== path);
+        if (remaining.length > 0) {
+          handleFileSelect(remaining[0].path);
+        }
+      }
+    },
+    [activeFilePath, files, handleFileSelect]
+  );
+
+  const handleTabClose = useCallback(
+    (path: string) => {
+      setOpenFilePaths((prev) => prev.filter((p) => p !== path));
+      if (activeFilePath === path) {
+        const remaining = openFilePaths.filter((p) => p !== path);
+        if (remaining.length > 0) {
+          handleFileSelect(remaining[remaining.length - 1]);
+        }
+      }
+    },
+    [activeFilePath, openFilePaths, handleFileSelect]
+  );
+
+  const handleCodeChange = useCallback(
+    (value: string | undefined) => {
+      const newCode = value || '';
+      setCode(newCode);
+      setModifiedFiles((prev) => new Set(prev).add(activeFilePath));
+    },
+    [activeFilePath]
+  );
+
+  const handleTerminalRunCode = useCallback(
+    async (termCode: string, lang: string) => {
+      const result = await executeCode(termCode, lang);
+      return { output: result.output, error: result.error };
+    },
+    []
+  );
+
+  // Derive current language from active file
+  const currentLanguage = files.find((f) => f.path === activeFilePath)?.language || language;
+
   // ═══════════════════════════════════════
   // Render
   // ═══════════════════════════════════════
@@ -411,6 +518,26 @@ export default function MonacoIDE({
           >
             {isReviewing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
             AI Review
+          </button>
+
+          <div className="w-px h-5 bg-white/10 mx-1" />
+
+          {/* Sidebar toggle */}
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className={`p-1.5 rounded-lg transition-all ${showSidebar ? 'text-teal bg-teal/10' : 'text-dim hover:text-text hover:bg-white/5'}`}
+            title="Toggle file explorer"
+          >
+            <FileCode2 size={14} />
+          </button>
+
+          {/* Terminal toggle */}
+          <button
+            onClick={() => setShowTerminal(!showTerminal)}
+            className={`p-1.5 rounded-lg transition-all ${showTerminal ? 'text-teal bg-teal/10' : 'text-dim hover:text-text hover:bg-white/5'}`}
+            title="Toggle terminal"
+          >
+            <Terminal size={14} />
           </button>
 
           <div className="w-px h-5 bg-white/10 mx-1" />
@@ -515,16 +642,44 @@ export default function MonacoIDE({
         )}
       </AnimatePresence>
 
-      {/* ── Monaco Editor ── */}
-      <div className="flex-1 min-h-[350px] max-h-[500px]">
-        <Editor
-          height="100%"
-          language={monacoLang}
-          value={code}
-          onChange={(value) => setCode(value || '')}
-          onMount={handleEditorMount}
-          theme="devpath-dark"
-          options={{
+      {/* ── Editor Area (with optional sidebar) ── */}
+      <div className="flex flex-1 min-h-0">
+        {/* File Explorer Sidebar */}
+        {showSidebar && (
+          <div className="w-52 flex-shrink-0 border-r border-white/5 overflow-hidden">
+            <FileExplorer
+              files={files}
+              activeFile={activeFilePath}
+              onFileSelect={handleFileSelect}
+              onFileCreate={handleFileCreate}
+              onFileDelete={handleFileDelete}
+              onFileRename={() => {}}
+            />
+          </div>
+        )}
+
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* File Tab Bar (only in multi-file mode) */}
+          {multiFile && openFilePaths.length > 1 && (
+            <FileTabBar
+              openFiles={openFilePaths}
+              activeFile={activeFilePath}
+              onSelect={handleFileSelect}
+              onClose={handleTabClose}
+              modifiedFiles={modifiedFiles}
+            />
+          )}
+
+          {/* Monaco Editor */}
+          <div className="flex-1 min-h-[350px] max-h-[500px]">
+            <Editor
+              height="100%"
+              language={languageMap[currentLanguage] || monacoLang}
+              value={code}
+              onChange={handleCodeChange}
+              onMount={handleEditorMount}
+              theme="devpath-dark"
+              options={{
             fontSize,
             tabSize,
             wordWrap: wordWrap ? 'on' : 'off',
@@ -556,6 +711,19 @@ export default function MonacoIDE({
           }
         />
       </div>
+        </div>
+      </div>
+
+      {/* ── Terminal Panel (optional) ── */}
+      {showTerminal && (
+        <div className="border-t border-white/5">
+          <TerminalEmulator
+            projectId={projectId}
+            onRunCode={handleTerminalRunCode}
+            className="rounded-none border-0"
+          />
+        </div>
+      )}
 
       {/* ── Output Panel ── */}
       <div className="border-t border-white/5">
