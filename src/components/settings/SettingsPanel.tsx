@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User,
@@ -16,11 +16,12 @@ import {
   Sun,
   Monitor,
   Globe,
-  Mail,
-  Smartphone,
   Eye,
   EyeOff,
   AlertTriangle,
+  Loader2,
+  Check,
+  LogIn,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Input } from '../ui/Input';
@@ -28,6 +29,8 @@ import { Textarea } from '../ui/Textarea';
 import { Toggle } from '../ui/Toggle';
 import { Select } from '../ui/Select';
 import Button from '../ui/Button';
+import { supabase } from '../../lib/supabase';
+import { updateProfile, updatePassword, signOut } from '../../lib/auth';
 
 type SettingsTab = 'profile' | 'notifications' | 'appearance' | 'privacy' | 'editor' | 'account';
 
@@ -71,14 +74,40 @@ function SettingRow({ label, description, children }: { label: string; descripti
   );
 }
 
-function ProfileSettings() {
-  const [displayName, setDisplayName] = useState('Jane Developer');
-  const [username, setUsername] = useState('janedev');
-  const [bio, setBio] = useState('Full stack developer passionate about React, TypeScript, and building great developer tools.');
-  const [location, setLocation] = useState('San Francisco, CA');
-  const [website, setWebsite] = useState('https://janedev.com');
-  const [github, setGithub] = useState('janedev');
-  const [twitter, setTwitter] = useState('janedev');
+function ProfileSettings({ userId, initialData }: { userId: string; initialData: any }) {
+  const [displayName, setDisplayName] = useState(initialData?.display_name || '');
+  const [username, setUsername] = useState(initialData?.username || '');
+  const [bio, setBio] = useState(initialData?.bio || '');
+  const [location, setLocation] = useState(initialData?.location || '');
+  const [website, setWebsite] = useState(initialData?.website || '');
+  const [github, setGithub] = useState(initialData?.github_username || '');
+  const [twitter, setTwitter] = useState(initialData?.twitter_handle || '');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleSave() {
+    setSaving(true);
+    setError('');
+    setSaved(false);
+    try {
+      await updateProfile(userId, {
+        display_name: displayName,
+        username,
+        bio,
+        location,
+        website,
+        github_username: github,
+        twitter_handle: twitter,
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) {
+      setError(err.message || 'Failed to save');
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -86,15 +115,17 @@ function ProfileSettings() {
         <div className="flex items-center gap-5">
           <div className="relative group">
             <div className="w-20 h-20 rounded-full bg-[var(--color-charcoal)] flex items-center justify-center overflow-hidden">
-              <User size={32} className="text-[var(--color-steel)]" />
+              {initialData?.avatar_url ? (
+                <img src={initialData.avatar_url} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-xl font-bold text-white">
+                  {displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2) || '?'}
+                </span>
+              )}
             </div>
-            <button className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <Camera size={20} className="text-white" />
-            </button>
           </div>
           <div className="space-y-2">
-            <Button variant="secondary" size="sm">Upload Photo</Button>
-            <p className="text-xs text-[var(--color-steel)]">JPG, PNG or GIF. Max 2MB.</p>
+            <p className="text-xs text-[var(--color-steel)]">Avatar is synced from your OAuth provider (GitHub/Google).</p>
           </div>
         </div>
       </SectionCard>
@@ -156,10 +187,21 @@ function ProfileSettings() {
         </div>
       </SectionCard>
 
-      <div className="flex justify-end">
-        <Button>
-          <Save size={16} />
-          Save Changes
+      {error && (
+        <div className="p-3 rounded-lg bg-[var(--color-rose)]/10 border border-[var(--color-rose)]/20 text-sm text-[var(--color-rose)]">
+          {error}
+        </div>
+      )}
+
+      <div className="flex items-center justify-end gap-3">
+        {saved && (
+          <span className="flex items-center gap-1 text-sm text-[var(--color-accent-teal)]">
+            <Check size={16} /> Saved
+          </span>
+        )}
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+          {saving ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
     </div>
@@ -435,13 +477,39 @@ function EditorSettings() {
   );
 }
 
-function AccountSettings() {
+function AccountSettings({ userId }: { userId: string }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwSaved, setPwSaved] = useState(false);
+  const [pwError, setPwError] = useState('');
+
+  async function handlePasswordChange() {
+    if (newPassword !== confirmPassword) return;
+    if (newPassword.length < 8) {
+      setPwError('Password must be at least 8 characters');
+      return;
+    }
+    setPwSaving(true);
+    setPwError('');
+    try {
+      await updatePassword(newPassword);
+      setPwSaved(true);
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => setPwSaved(false), 3000);
+    } catch (err: any) {
+      setPwError(err.message || 'Failed to update password');
+    } finally {
+      setPwSaving(false);
+    }
+  }
+
+  async function handleSignOut() {
+    await signOut();
+  }
 
   return (
     <div className="space-y-6">
@@ -454,43 +522,7 @@ function AccountSettings() {
             </div>
             <p className="text-sm text-[var(--color-steel)] mt-1">Basic access to roadmaps and community features</p>
           </div>
-          <Button size="sm">Upgrade to Pro</Button>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-          {[
-            { label: 'Roadmaps', free: '3', pro: 'Unlimited' },
-            { label: 'AI Tutor', free: '10/day', pro: 'Unlimited' },
-            { label: 'Projects', free: '5', pro: 'Unlimited' },
-            { label: 'Code Editor', free: 'Basic', pro: 'Full IDE' },
-          ].map((feature) => (
-            <div key={feature.label} className="p-3 rounded-lg border border-[var(--color-charcoal)] bg-[var(--color-abyss)]">
-              <p className="text-xs text-[var(--color-steel)]">{feature.label}</p>
-              <p className="text-sm font-medium text-white mt-1">{feature.free}</p>
-              <p className="text-xs text-[var(--color-accent-teal)] mt-0.5">Pro: {feature.pro}</p>
-            </div>
-          ))}
-        </div>
-      </SectionCard>
-
-      <SectionCard title="Connected Accounts">
-        <div className="space-y-3">
-          {[
-            { name: 'GitHub', connected: true, icon: '🔗' },
-            { name: 'Google', connected: true, icon: '🔗' },
-            { name: 'LinkedIn', connected: false, icon: '🔗' },
-          ].map((account) => (
-            <div key={account.name} className="flex items-center justify-between p-3 rounded-lg border border-[var(--color-charcoal)]">
-              <div className="flex items-center gap-3">
-                <span>{account.icon}</span>
-                <span className="text-sm font-medium text-white">{account.name}</span>
-              </div>
-              {account.connected ? (
-                <Button variant="ghost" size="sm">Disconnect</Button>
-              ) : (
-                <Button variant="secondary" size="sm">Connect</Button>
-              )}
-            </div>
-          ))}
+          <a href="/pricing"><Button size="sm">Upgrade to Pro</Button></a>
         </div>
       </SectionCard>
 
@@ -498,28 +530,12 @@ function AccountSettings() {
         <div className="space-y-4 max-w-md">
           <div className="relative">
             <Input
-              label="Current Password"
-              type={showCurrentPw ? 'text' : 'password'}
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter current password"
-            />
-            <button
-              type="button"
-              onClick={() => setShowCurrentPw(!showCurrentPw)}
-              className="absolute right-3 top-[38px] text-[var(--color-steel)] hover:text-white transition-colors"
-            >
-              {showCurrentPw ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
-          </div>
-          <div className="relative">
-            <Input
               label="New Password"
               type={showNewPw ? 'text' : 'password'}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Enter new password"
-              hint="Minimum 8 characters with at least one number"
+              hint="Minimum 8 characters"
             />
             <button
               type="button"
@@ -537,8 +553,15 @@ function AccountSettings() {
             placeholder="Confirm new password"
             error={confirmPassword && confirmPassword !== newPassword ? 'Passwords do not match' : undefined}
           />
-          <Button size="sm" disabled={!currentPassword || !newPassword || newPassword !== confirmPassword}>
-            Update Password
+          {pwError && <p className="text-sm text-[var(--color-rose)]">{pwError}</p>}
+          {pwSaved && <p className="text-sm text-[var(--color-accent-teal)] flex items-center gap-1"><Check size={14} /> Password updated</p>}
+          <Button
+            size="sm"
+            disabled={!newPassword || newPassword !== confirmPassword || pwSaving}
+            onClick={handlePasswordChange}
+          >
+            {pwSaving ? <Loader2 size={14} className="animate-spin" /> : null}
+            {pwSaving ? 'Updating...' : 'Update Password'}
           </Button>
         </div>
       </SectionCard>
@@ -599,25 +622,77 @@ function AccountSettings() {
               <p className="text-xs text-[var(--color-steel)]">Log out of your DevPath account</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm">Sign Out</Button>
+          <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>
         </div>
       </SectionCard>
     </div>
   );
 }
 
-const contentMap: Record<SettingsTab, React.FC> = {
-  profile: ProfileSettings,
-  notifications: NotificationSettings,
-  appearance: AppearanceSettings,
-  privacy: PrivacySettings,
-  editor: EditorSettings,
-  account: AccountSettings,
-};
-
 export function SettingsPanel() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
-  const Content = contentMap[activeTab];
+  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [profileData, setProfileData] = useState<any>(null);
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  async function loadUser() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUserId(session.user.id);
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+        setProfileData(data);
+      }
+    } catch (err) {
+      console.error('Failed to load user:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 size={32} className="animate-spin text-[var(--color-accent-teal)]" />
+      </div>
+    );
+  }
+
+  if (!userId) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-center">
+        <LogIn size={48} className="text-[var(--color-steel)] mb-4" />
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in to access settings</h2>
+        <p className="text-[var(--color-steel)] mb-6">You need to be signed in to manage your account.</p>
+        <a href="/login"><Button>Sign In</Button></a>
+      </div>
+    );
+  }
+
+  function renderContent() {
+    switch (activeTab) {
+      case 'profile':
+        return <ProfileSettings userId={userId!} initialData={profileData} />;
+      case 'notifications':
+        return <NotificationSettings />;
+      case 'appearance':
+        return <AppearanceSettings />;
+      case 'privacy':
+        return <PrivacySettings />;
+      case 'editor':
+        return <EditorSettings />;
+      case 'account':
+        return <AccountSettings userId={userId!} />;
+    }
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -667,7 +742,7 @@ export function SettingsPanel() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <Content />
+              {renderContent()}
             </motion.div>
           </AnimatePresence>
         </div>

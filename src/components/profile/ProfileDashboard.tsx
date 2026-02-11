@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 import {
@@ -15,63 +15,92 @@ import {
   TrendingUp,
   Settings,
   Edit3,
+  Loader2,
+  LogIn,
 } from 'lucide-react';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import ProgressBar from '../ui/ProgressBar';
+import { supabase } from '../../lib/supabase';
+import { getProfile } from '../../lib/auth';
+import {
+  getUserRoadmapProgress,
+  getUserActivity,
+  getUserBadges,
+  getUserSubmissions,
+} from '../../lib/data';
 
-// Mock data - will be replaced with Supabase data
-const mockUser = {
-  name: 'Jane Developer',
-  username: 'janedev',
-  avatar: null,
-  bio: 'Full stack developer passionate about React, TypeScript, and building great developer tools.',
-  location: 'San Francisco, CA',
-  joinedDate: 'Feb 2026',
-  website: 'https://janedev.com',
-  github: 'janedev',
-  twitter: 'janedev',
-  level: 12,
-  xp: 2450,
-  xpToNext: 3000,
-  streak: 7,
-  longestStreak: 21,
-  totalHours: 128,
-  completedTopics: 34,
-  completedProjects: 8,
-  badges: [
-    { id: '1', name: 'Early Adopter', icon: '🌟', description: 'Joined during beta', earned: '2026-02-10' },
-    { id: '2', name: 'Week Warrior', icon: '🔥', description: '7-day learning streak', earned: '2026-02-10' },
-    { id: '3', name: 'Frontend Hero', icon: '🎨', description: 'Completed Frontend roadmap', earned: null },
-    { id: '4', name: 'Code Reviewer', icon: '👁️', description: 'First AI code review', earned: '2026-02-10' },
-    { id: '5', name: 'Quiz Master', icon: '🧠', description: 'Score 100% on 5 quizzes', earned: null },
-    { id: '6', name: 'Night Owl', icon: '🦉', description: 'Study session after midnight', earned: '2026-02-10' },
-  ],
-  activeRoadmaps: [
-    { id: 'frontend', title: 'Frontend Developer', icon: '🎨', progress: 42, totalTopics: 14 },
-    { id: 'backend', title: 'Backend Developer', icon: '⚙️', progress: 18, totalTopics: 12 },
-    { id: 'ai-engineer', title: 'AI Engineer', icon: '🤖', progress: 5, totalTopics: 8 },
-  ],
-  recentActivity: [
-    { type: 'completed', topic: 'React Hooks', roadmap: 'Frontend', time: '2 hours ago' },
-    { type: 'started', topic: 'Node.js Basics', roadmap: 'Backend', time: '5 hours ago' },
-    { type: 'badge', badge: 'Week Warrior', time: '1 day ago' },
-    { type: 'completed', topic: 'TypeScript Generics', roadmap: 'Frontend', time: '1 day ago' },
-    { type: 'project', project: 'Todo API', time: '2 days ago' },
-  ],
-  heatmap: generateHeatmapData(),
+// ── Types ──
+interface ProfileData {
+  id: string;
+  display_name: string;
+  username: string;
+  email: string;
+  avatar_url: string | null;
+  bio: string | null;
+  location: string | null;
+  website: string | null;
+  github_username: string | null;
+  twitter_handle: string | null;
+  xp: number;
+  level: number;
+  streak: number;
+  longest_streak: number;
+  created_at: string;
+}
+
+interface RoadmapProgressItem {
+  roadmap_id: string;
+  node_statuses: Record<string, string>;
+  started_at: string;
+  last_activity_at: string;
+}
+
+interface ActivityItem {
+  id: string;
+  action: string;
+  metadata: Record<string, any>;
+  xp_gained: number;
+  created_at: string;
+}
+
+interface BadgeItem {
+  id: string;
+  earned_at: string;
+  badges: {
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    category: string;
+    xp_reward: number;
+  };
+}
+
+// Roadmap metadata for display
+const roadmapMeta: Record<string, { title: string; icon: string; totalTopics: number }> = {
+  frontend: { title: 'Frontend Developer', icon: '🎨', totalTopics: 14 },
+  backend: { title: 'Backend Developer', icon: '⚙️', totalTopics: 12 },
+  fullstack: { title: 'Full Stack Developer', icon: '🔥', totalTopics: 18 },
+  devops: { title: 'DevOps Engineer', icon: '🚀', totalTopics: 10 },
+  'ai-engineer': { title: 'AI Engineer', icon: '🤖', totalTopics: 8 },
 };
 
-function generateHeatmapData() {
+function generateHeatmapFromActivity(activities: ActivityItem[]) {
   const data: { date: string; count: number }[] = [];
-  const now = new Date(2026, 1, 10);
+  const counts: Record<string, number> = {};
+
+  activities.forEach((a) => {
+    const date = a.created_at.split('T')[0];
+    counts[date] = (counts[date] || 0) + 1;
+  });
+
+  const now = new Date();
   for (let i = 90; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
-    data.push({
-      date: d.toISOString().split('T')[0],
-      count: Math.random() > 0.3 ? Math.floor(Math.random() * 4) + 1 : 0,
-    });
+    const key = d.toISOString().split('T')[0];
+    data.push({ date: key, count: counts[key] || 0 });
   }
   return data;
 }
@@ -85,10 +114,9 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
     return 'bg-[var(--color-accent-teal)]/80';
   };
 
-  // Group by weeks (columns)
   const weeks: { date: string; count: number }[][] = [];
   let currentWeek: { date: string; count: number }[] = [];
-  data.forEach((d, i) => {
+  data.forEach((d) => {
     const dayOfWeek = new Date(d.date).getDay();
     if (dayOfWeek === 0 && currentWeek.length > 0) {
       weeks.push(currentWeek);
@@ -115,9 +143,119 @@ function ActivityHeatmap({ data }: { data: { date: string; count: number }[] }) 
   );
 }
 
+function formatTimeAgo(dateStr: string) {
+  const now = new Date();
+  const date = new Date(dateStr);
+  const diffMs = now.getTime() - date.getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return date.toLocaleDateString();
+}
+
+function getActionLabel(action: string, metadata: Record<string, any>) {
+  switch (action) {
+    case 'node_completed':
+      return { type: 'completed' as const, text: `Completed a topic in ${metadata.roadmap_id || 'a roadmap'}` };
+    case 'roadmap_started':
+      return { type: 'started' as const, text: `Started ${roadmapMeta[metadata.roadmap_id]?.title || 'a roadmap'}` };
+    case 'project_submitted':
+      return { type: 'project' as const, text: `Submitted project ${metadata.project_id || ''}` };
+    case 'project_passed':
+      return { type: 'project' as const, text: `Passed project ${metadata.project_id || ''}` };
+    case 'badge_earned':
+      return { type: 'badge' as const, text: `Earned a new badge` };
+    case 'level_up':
+      return { type: 'completed' as const, text: `Leveled up to Level ${metadata.to || ''}!` };
+    case 'streak_updated':
+      return { type: 'started' as const, text: `Streak updated to ${metadata.days || ''} days` };
+    default:
+      return { type: 'started' as const, text: action.replace(/_/g, ' ') };
+  }
+}
+
 export default function ProfileDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'roadmaps' | 'badges' | 'activity'>('overview');
-  const user = mockUser;
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [roadmapProgress, setRoadmapProgress] = useState<RoadmapProgressItem[]>([]);
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [badges, setBadges] = useState<BadgeItem[]>([]);
+  const [allBadges, setAllBadges] = useState<{ id: string; name: string; description: string; icon: string; category: string }[]>([]);
+  const [totalProjects, setTotalProjects] = useState(0);
+
+  useEffect(() => {
+    loadProfileData();
+  }, []);
+
+  async function loadProfileData() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        setLoading(false);
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const [profileData, progress, activityData, badgesData, submissions, allBadgesData] = await Promise.all([
+        getProfile(userId),
+        getUserRoadmapProgress(userId),
+        getUserActivity(userId, 50),
+        getUserBadges(userId),
+        getUserSubmissions(userId),
+        supabase.from('badges').select('*').order('category'),
+      ]);
+
+      setProfile(profileData as ProfileData);
+      setRoadmapProgress((progress || []) as RoadmapProgressItem[]);
+      setActivities((activityData || []) as ActivityItem[]);
+      setBadges((badgesData || []) as BadgeItem[]);
+      setTotalProjects(submissions?.length || 0);
+      setAllBadges((allBadgesData.data || []) as any[]);
+    } catch (err) {
+      console.error('Failed to load profile:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 size={32} className="animate-spin text-[var(--color-accent-teal)]" />
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 text-center">
+        <LogIn size={48} className="text-[var(--color-steel)] mb-4" />
+        <h2 className="text-xl font-semibold text-white mb-2">Sign in to view your profile</h2>
+        <p className="text-[var(--color-steel)] mb-6 max-w-md">
+          Track your progress, earn badges, and see your learning journey.
+        </p>
+        <a href="/login">
+          <Button>Sign In</Button>
+        </a>
+      </div>
+    );
+  }
+
+  const xpToNext = Math.pow(profile.level, 2) * 100;
+  const xpProgress = Math.min(100, Math.round((profile.xp / Math.max(xpToNext, 1)) * 100));
+  const completedTopics = roadmapProgress.reduce((sum, rp) => {
+    const statuses = rp.node_statuses || {};
+    return sum + Object.values(statuses).filter((s) => s === 'completed').length;
+  }, 0);
+
+  const heatmapData = generateHeatmapFromActivity(activities);
+  const earnedBadgeIds = new Set(badges.map((b) => b.badges?.id));
+  const joinedDate = new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 
   const tabs = [
     { id: 'overview' as const, label: 'Overview', icon: TrendingUp },
@@ -134,14 +272,16 @@ export default function ProfileDashboard() {
           {/* Avatar */}
           <div className="relative">
             <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[var(--color-accent-teal)]/20 to-[var(--color-accent-violet)]/20 border border-white/[0.08] flex items-center justify-center text-4xl">
-              {user.avatar ? (
-                <img src={user.avatar} alt={user.name} className="w-full h-full rounded-2xl object-cover" />
+              {profile.avatar_url ? (
+                <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full rounded-2xl object-cover" />
               ) : (
-                <User size={40} className="text-[var(--color-steel)]" />
+                <span className="text-2xl font-bold text-white">
+                  {profile.display_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                </span>
               )}
             </div>
             <div className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full bg-[var(--color-accent-teal)] text-[var(--color-void)] text-xs font-bold">
-              Lv.{user.level}
+              Lv.{profile.level}
             </div>
           </div>
 
@@ -149,34 +289,29 @@ export default function ProfileDashboard() {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-1">
               <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-display)]">
-                {user.name}
+                {profile.display_name}
               </h1>
-              <Badge variant="teal" size="sm">Pro</Badge>
             </div>
-            <p className="text-sm text-[var(--color-steel)] mb-2">@{user.username}</p>
-            <p className="text-sm text-[var(--color-silver)] mb-4 max-w-lg">{user.bio}</p>
+            <p className="text-sm text-[var(--color-steel)] mb-2">@{profile.username}</p>
+            {profile.bio && <p className="text-sm text-[var(--color-silver)] mb-4 max-w-lg">{profile.bio}</p>}
 
             <div className="flex items-center gap-5 text-xs text-[var(--color-steel)]">
-              {user.location && (
-                <span className="flex items-center gap-1">
-                  <MapPin size={12} /> {user.location}
-                </span>
+              {profile.location && (
+                <span className="flex items-center gap-1"><MapPin size={12} /> {profile.location}</span>
               )}
-              <span className="flex items-center gap-1">
-                <Calendar size={12} /> Joined {user.joinedDate}
-              </span>
-              {user.github && (
-                <a href={`https://github.com/${user.github}`} className="flex items-center gap-1 hover:text-white transition-colors">
-                  <Github size={12} /> {user.github}
+              <span className="flex items-center gap-1"><Calendar size={12} /> Joined {joinedDate}</span>
+              {profile.github_username && (
+                <a href={`https://github.com/${profile.github_username}`} className="flex items-center gap-1 hover:text-white transition-colors">
+                  <Github size={12} /> {profile.github_username}
                 </a>
               )}
-              {user.twitter && (
-                <a href={`https://twitter.com/${user.twitter}`} className="flex items-center gap-1 hover:text-white transition-colors">
-                  <Twitter size={12} /> {user.twitter}
+              {profile.twitter_handle && (
+                <a href={`https://twitter.com/${profile.twitter_handle}`} className="flex items-center gap-1 hover:text-white transition-colors">
+                  <Twitter size={12} /> {profile.twitter_handle}
                 </a>
               )}
-              {user.website && (
-                <a href={user.website} className="flex items-center gap-1 hover:text-white transition-colors">
+              {profile.website && (
+                <a href={profile.website} className="flex items-center gap-1 hover:text-white transition-colors">
                   <Globe size={12} /> Website
                 </a>
               )}
@@ -185,32 +320,31 @@ export default function ProfileDashboard() {
 
           {/* Actions */}
           <div className="flex gap-2">
-            <Button variant="ghost" size="sm">
-              <Settings size={16} />
-            </Button>
-            <Button variant="secondary" size="sm">
-              <Edit3 size={14} className="mr-1.5" />
-              Edit Profile
-            </Button>
+            <a href="/settings">
+              <Button variant="ghost" size="sm"><Settings size={16} /></Button>
+            </a>
+            <a href="/settings">
+              <Button variant="secondary" size="sm"><Edit3 size={14} className="mr-1.5" />Edit Profile</Button>
+            </a>
           </div>
         </div>
 
         {/* XP bar */}
         <div className="mt-6 pt-6 border-t border-white/[0.06]">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-[var(--color-steel)]">Level {user.level} Progress</span>
-            <span className="text-xs font-mono text-[var(--color-accent-teal)]">{user.xp} / {user.xpToNext} XP</span>
+            <span className="text-xs text-[var(--color-steel)]">Level {profile.level} Progress</span>
+            <span className="text-xs font-mono text-[var(--color-accent-teal)]">{profile.xp.toLocaleString()} / {xpToNext.toLocaleString()} XP</span>
           </div>
-          <ProgressBar value={Math.round((user.xp / user.xpToNext) * 100)} showLabel={false} />
+          <ProgressBar value={xpProgress} showLabel={false} />
         </div>
 
         {/* Stats row */}
         <div className="grid grid-cols-4 gap-4 mt-6">
           {[
-            { icon: Flame, label: 'Current Streak', value: `${user.streak} days`, color: 'text-[var(--color-accent-amber)]' },
-            { icon: BookOpen, label: 'Topics Completed', value: String(user.completedTopics), color: 'text-[var(--color-accent-teal)]' },
-            { icon: Code2, label: 'Projects Done', value: String(user.completedProjects), color: 'text-[var(--color-accent-violet)]' },
-            { icon: Trophy, label: 'Total Hours', value: `${user.totalHours}h`, color: 'text-[var(--color-accent-sky)]' },
+            { icon: Flame, label: 'Current Streak', value: `${profile.streak} days`, color: 'text-[var(--color-accent-amber)]' },
+            { icon: BookOpen, label: 'Topics Completed', value: String(completedTopics), color: 'text-[var(--color-accent-teal)]' },
+            { icon: Code2, label: 'Projects Done', value: String(totalProjects), color: 'text-[var(--color-accent-violet)]' },
+            { icon: Trophy, label: 'Badges Earned', value: String(badges.length), color: 'text-[var(--color-accent-sky)]' },
           ].map((stat) => (
             <div key={stat.label} className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-4 text-center">
               <stat.icon size={20} className={clsx('mx-auto mb-2', stat.color)} />
@@ -252,7 +386,7 @@ export default function ProfileDashboard() {
             {/* Activity Heatmap */}
             <div className="col-span-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
               <h3 className="text-sm font-semibold text-white mb-4">Learning Activity</h3>
-              <ActivityHeatmap data={user.heatmap} />
+              <ActivityHeatmap data={heatmapData} />
               <div className="flex items-center justify-end gap-2 mt-3">
                 <span className="text-[10px] text-[var(--color-steel)]">Less</span>
                 {[0, 1, 2, 3, 4].map((level) => (
@@ -276,31 +410,35 @@ export default function ProfileDashboard() {
             <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
               <h3 className="text-sm font-semibold text-white mb-4">Recent Activity</h3>
               <div className="space-y-3">
-                {user.recentActivity.map((activity, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className={clsx(
-                      'w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5',
-                      activity.type === 'completed' && 'bg-[var(--color-accent-teal)]/10 text-[var(--color-accent-teal)]',
-                      activity.type === 'started' && 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)]',
-                      activity.type === 'badge' && 'bg-[var(--color-accent-violet)]/10 text-[var(--color-accent-violet)]',
-                      activity.type === 'project' && 'bg-[var(--color-accent-sky)]/10 text-[var(--color-accent-sky)]',
-                    )}>
-                      {activity.type === 'completed' && '✓'}
-                      {activity.type === 'started' && '→'}
-                      {activity.type === 'badge' && '★'}
-                      {activity.type === 'project' && '◆'}
+                {activities.length === 0 && (
+                  <p className="text-xs text-[var(--color-steel)]">No activity yet. Start learning!</p>
+                )}
+                {activities.slice(0, 5).map((activity) => {
+                  const label = getActionLabel(activity.action, activity.metadata);
+                  return (
+                    <div key={activity.id} className="flex items-start gap-3">
+                      <div className={clsx(
+                        'w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5',
+                        label.type === 'completed' && 'bg-[var(--color-accent-teal)]/10 text-[var(--color-accent-teal)]',
+                        label.type === 'started' && 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)]',
+                        label.type === 'badge' && 'bg-[var(--color-accent-violet)]/10 text-[var(--color-accent-violet)]',
+                        label.type === 'project' && 'bg-[var(--color-accent-sky)]/10 text-[var(--color-accent-sky)]',
+                      )}>
+                        {label.type === 'completed' && '✓'}
+                        {label.type === 'started' && '→'}
+                        {label.type === 'badge' && '★'}
+                        {label.type === 'project' && '◆'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-[var(--color-silver)] leading-relaxed">{label.text}</p>
+                        {activity.xp_gained > 0 && (
+                          <span className="text-[10px] text-[var(--color-accent-teal)]">+{activity.xp_gained} XP</span>
+                        )}
+                        <p className="text-[10px] text-[var(--color-steel)] mt-0.5">{formatTimeAgo(activity.created_at)}</p>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-[var(--color-silver)] leading-relaxed">
-                        {activity.type === 'completed' && <>Completed <strong className="text-white">{activity.topic}</strong> in {activity.roadmap}</>}
-                        {activity.type === 'started' && <>Started <strong className="text-white">{activity.topic}</strong> in {activity.roadmap}</>}
-                        {activity.type === 'badge' && <>Earned <strong className="text-white">{activity.badge}</strong> badge</>}
-                        {activity.type === 'project' && <>Finished project <strong className="text-white">{activity.project}</strong></>}
-                      </p>
-                      <p className="text-[10px] text-[var(--color-steel)] mt-0.5">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -310,103 +448,137 @@ export default function ProfileDashboard() {
                 <h3 className="text-sm font-semibold text-white">Active Roadmaps</h3>
                 <a href="/roadmaps" className="text-xs text-[var(--color-accent-teal)] hover:underline">Browse all</a>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                {user.activeRoadmaps.map((rm) => (
-                  <a
-                    key={rm.id}
-                    href={`/roadmaps/${rm.id}`}
-                    className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 hover:border-[var(--color-accent-teal)]/20 transition-all group"
-                  >
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="text-2xl">{rm.icon}</span>
-                      <div>
-                        <h4 className="text-sm font-semibold text-white group-hover:text-[var(--color-accent-teal)] transition-colors">{rm.title}</h4>
-                        <p className="text-xs text-[var(--color-steel)]">{rm.totalTopics} topics</p>
-                      </div>
-                    </div>
-                    <ProgressBar value={rm.progress} showLabel />
-                  </a>
-                ))}
-              </div>
+              {roadmapProgress.length === 0 ? (
+                <p className="text-sm text-[var(--color-steel)]">No roadmaps started yet. <a href="/roadmaps" className="text-[var(--color-accent-teal)] hover:underline">Explore roadmaps</a></p>
+              ) : (
+                <div className="grid grid-cols-3 gap-4">
+                  {roadmapProgress.map((rp) => {
+                    const meta = roadmapMeta[rp.roadmap_id] || { title: rp.roadmap_id, icon: '📘', totalTopics: 10 };
+                    const completed = Object.values(rp.node_statuses || {}).filter((s) => s === 'completed').length;
+                    const progress = Math.round((completed / Math.max(meta.totalTopics, 1)) * 100);
+                    return (
+                      <a
+                        key={rp.roadmap_id}
+                        href={`/roadmaps/${rp.roadmap_id}`}
+                        className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 hover:border-[var(--color-accent-teal)]/20 transition-all group"
+                      >
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-2xl">{meta.icon}</span>
+                          <div>
+                            <h4 className="text-sm font-semibold text-white group-hover:text-[var(--color-accent-teal)] transition-colors">{meta.title}</h4>
+                            <p className="text-xs text-[var(--color-steel)]">{meta.totalTopics} topics</p>
+                          </div>
+                        </div>
+                        <ProgressBar value={progress} showLabel />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {activeTab === 'badges' && (
           <div className="grid grid-cols-3 gap-4">
-            {user.badges.map((badge) => (
-              <div
-                key={badge.id}
-                className={clsx(
-                  'rounded-xl border p-5 text-center transition-all',
-                  badge.earned
-                    ? 'border-white/[0.08] bg-white/[0.02] hover:border-[var(--color-accent-teal)]/20'
-                    : 'border-white/[0.04] bg-white/[0.01] opacity-50'
-                )}
-              >
-                <div className="text-4xl mb-3">{badge.icon}</div>
-                <h4 className="text-sm font-semibold text-white mb-1">{badge.name}</h4>
-                <p className="text-xs text-[var(--color-steel)] mb-2">{badge.description}</p>
-                {badge.earned ? (
-                  <Badge variant="teal" size="sm">Earned</Badge>
-                ) : (
-                  <Badge variant="default" size="sm">Locked</Badge>
-                )}
-              </div>
-            ))}
+            {allBadges.length === 0 && badges.length === 0 && (
+              <p className="col-span-3 text-sm text-[var(--color-steel)] text-center py-8">
+                No badges available yet. Keep learning to earn them!
+              </p>
+            )}
+            {allBadges.map((badge) => {
+              const earned = earnedBadgeIds.has(badge.id);
+              return (
+                <div
+                  key={badge.id}
+                  className={clsx(
+                    'rounded-xl border p-5 text-center transition-all',
+                    earned
+                      ? 'border-white/[0.08] bg-white/[0.02] hover:border-[var(--color-accent-teal)]/20'
+                      : 'border-white/[0.04] bg-white/[0.01] opacity-50'
+                  )}
+                >
+                  <div className="text-4xl mb-3">{badge.icon}</div>
+                  <h4 className="text-sm font-semibold text-white mb-1">{badge.name}</h4>
+                  <p className="text-xs text-[var(--color-steel)] mb-2">{badge.description}</p>
+                  {earned ? (
+                    <Badge variant="teal" size="sm">Earned</Badge>
+                  ) : (
+                    <Badge variant="default" size="sm">Locked</Badge>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
 
         {activeTab === 'roadmaps' && (
           <div className="space-y-4">
-            {user.activeRoadmaps.map((rm) => (
-              <a
-                key={rm.id}
-                href={`/roadmaps/${rm.id}`}
-                className="flex items-center gap-5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 hover:border-[var(--color-accent-teal)]/20 transition-all group"
-              >
-                <span className="text-3xl">{rm.icon}</span>
-                <div className="flex-1">
-                  <h4 className="text-base font-semibold text-white group-hover:text-[var(--color-accent-teal)] transition-colors">{rm.title}</h4>
-                  <p className="text-xs text-[var(--color-steel)] mt-1">{rm.totalTopics} topics</p>
-                </div>
-                <div className="w-48">
-                  <ProgressBar value={rm.progress} showLabel />
-                </div>
-              </a>
-            ))}
+            {roadmapProgress.length === 0 && (
+              <p className="text-sm text-[var(--color-steel)] text-center py-8">
+                No roadmaps started yet. <a href="/roadmaps" className="text-[var(--color-accent-teal)] hover:underline">Browse roadmaps</a>
+              </p>
+            )}
+            {roadmapProgress.map((rp) => {
+              const meta = roadmapMeta[rp.roadmap_id] || { title: rp.roadmap_id, icon: '📘', totalTopics: 10 };
+              const completed = Object.values(rp.node_statuses || {}).filter((s) => s === 'completed').length;
+              const progress = Math.round((completed / Math.max(meta.totalTopics, 1)) * 100);
+              return (
+                <a
+                  key={rp.roadmap_id}
+                  href={`/roadmaps/${rp.roadmap_id}`}
+                  className="flex items-center gap-5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 hover:border-[var(--color-accent-teal)]/20 transition-all group"
+                >
+                  <span className="text-3xl">{meta.icon}</span>
+                  <div className="flex-1">
+                    <h4 className="text-base font-semibold text-white group-hover:text-[var(--color-accent-teal)] transition-colors">{meta.title}</h4>
+                    <p className="text-xs text-[var(--color-steel)] mt-1">{completed}/{meta.totalTopics} topics completed</p>
+                  </div>
+                  <div className="w-48">
+                    <ProgressBar value={progress} showLabel />
+                  </div>
+                </a>
+              );
+            })}
           </div>
         )}
 
         {activeTab === 'activity' && (
           <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
-            <div className="space-y-4">
-              {user.recentActivity.map((activity, i) => (
-                <div key={i} className="flex items-start gap-4 pb-4 border-b border-white/[0.04] last:border-0 last:pb-0">
-                  <div className={clsx(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0',
-                    activity.type === 'completed' && 'bg-[var(--color-accent-teal)]/10 text-[var(--color-accent-teal)]',
-                    activity.type === 'started' && 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)]',
-                    activity.type === 'badge' && 'bg-[var(--color-accent-violet)]/10 text-[var(--color-accent-violet)]',
-                    activity.type === 'project' && 'bg-[var(--color-accent-sky)]/10 text-[var(--color-accent-sky)]',
-                  )}>
-                    {activity.type === 'completed' && '✓'}
-                    {activity.type === 'started' && '→'}
-                    {activity.type === 'badge' && '★'}
-                    {activity.type === 'project' && '◆'}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-[var(--color-silver)]">
-                      {activity.type === 'completed' && <>Completed <strong className="text-white">{activity.topic}</strong> in {activity.roadmap}</>}
-                      {activity.type === 'started' && <>Started learning <strong className="text-white">{activity.topic}</strong> in {activity.roadmap}</>}
-                      {activity.type === 'badge' && <>Earned the <strong className="text-white">{activity.badge}</strong> badge</>}
-                      {activity.type === 'project' && <>Finished project <strong className="text-white">{activity.project}</strong></>}
-                    </p>
-                    <p className="text-xs text-[var(--color-steel)] mt-1">{activity.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {activities.length === 0 ? (
+              <p className="text-sm text-[var(--color-steel)] text-center py-8">No activity yet. Start learning to see your progress here!</p>
+            ) : (
+              <div className="space-y-4">
+                {activities.map((activity) => {
+                  const label = getActionLabel(activity.action, activity.metadata);
+                  return (
+                    <div key={activity.id} className="flex items-start gap-4 pb-4 border-b border-white/[0.04] last:border-0 last:pb-0">
+                      <div className={clsx(
+                        'w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0',
+                        label.type === 'completed' && 'bg-[var(--color-accent-teal)]/10 text-[var(--color-accent-teal)]',
+                        label.type === 'started' && 'bg-[var(--color-accent-amber)]/10 text-[var(--color-accent-amber)]',
+                        label.type === 'badge' && 'bg-[var(--color-accent-violet)]/10 text-[var(--color-accent-violet)]',
+                        label.type === 'project' && 'bg-[var(--color-accent-sky)]/10 text-[var(--color-accent-sky)]',
+                      )}>
+                        {label.type === 'completed' && '✓'}
+                        {label.type === 'started' && '→'}
+                        {label.type === 'badge' && '★'}
+                        {label.type === 'project' && '◆'}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-[var(--color-silver)]">{label.text}</p>
+                        <div className="flex items-center gap-3 mt-1">
+                          {activity.xp_gained > 0 && (
+                            <span className="text-xs text-[var(--color-accent-teal)]">+{activity.xp_gained} XP</span>
+                          )}
+                          <span className="text-xs text-[var(--color-steel)]">{formatTimeAgo(activity.created_at)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
       </motion.div>
