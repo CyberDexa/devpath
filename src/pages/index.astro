@@ -524,6 +524,8 @@ import { allRoadmaps } from "../data/roadmaps";
             ["Job Matching", false, true],
             ["Mock Interviews", false, true],
             ["AI Code Review", false, true],
+            ["Learning Analytics", false, true],
+            ["PWA & Offline", false, true],
           ].map(([feature, others, devpath]) => (
             <div class="grid grid-cols-3 border-b border-white/3 last:border-0 text-sm">
               <div class="px-6 py-3.5 text-text">{feature}</div>
@@ -651,6 +653,76 @@ import { allRoadmaps } from "../data/roadmaps";
               </div>
             </div>
           </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform & Scale Section (Phase 6) -->
+  <section class="relative py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-6">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+          Platform & Scale
+        </div>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bright mb-4">
+          Built to <span class="text-gradient">scale with you</span>
+        </h2>
+        <p class="text-dim text-lg max-w-xl mx-auto">
+          Enterprise-grade analytics, billing, notifications, and performance — so you can focus on learning.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          {
+            icon: "📊",
+            title: "Learning Analytics",
+            desc: "Deep insights into your learning patterns, weekly activity, skill proficiency, and personalized AI recommendations.",
+            href: "/analytics",
+          },
+          {
+            icon: "💳",
+            title: "Flexible Billing",
+            desc: "Stripe-powered subscriptions with Free, Pro, and Teams plans. Monthly or annual billing with instant access.",
+            href: "/billing",
+          },
+          {
+            icon: "🔔",
+            title: "Smart Notifications",
+            desc: "Customizable email notifications for streaks, achievements, battles, jobs, and weekly digests. Never miss what matters.",
+            href: "/notifications",
+          },
+          {
+            icon: "⚡",
+            title: "PWA & Offline",
+            desc: "Install DevPath as an app on any device. Service worker caching for fast loads and offline access to your content.",
+            href: "/roadmaps",
+          },
+          {
+            icon: "🛡️",
+            title: "Admin Dashboard",
+            desc: "Full platform management with user analytics, revenue tracking, feature flags, content moderation, and audit logs.",
+            href: "/admin",
+          },
+          {
+            icon: "🎯",
+            title: "Performance First",
+            desc: "Core Web Vitals optimized, lazy loading, link prefetching, and resource hints for sub-second page loads.",
+            href: "/roadmaps",
+          },
+        ].map((feature) => (
+          <a
+            href={feature.href}
+            class="group block rounded-xl bg-surface border border-white/5 p-6 hover:border-emerald-500/15 transition-all duration-300 hover:shadow-glow"
+          >
+            <span class="text-3xl mb-4 block">{feature.icon}</span>
+            <h3 class="font-display font-bold text-bright text-base mb-2 group-hover:text-emerald-400 transition-colors">
+              {feature.title}
+            </h3>
+            <p class="text-sm text-dim leading-relaxed">{feature.desc}</p>
+          </a>
         ))}
       </div>
     </div>

@@ -4,12 +4,44 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  ogType?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
 }
 
 const {
   title,
   description = "AI-powered developer career platform. Adaptive roadmaps, integrated coding, gamification, and career tools.",
+  ogImage = "https://devpath-phi.vercel.app/og-default.png",
+  ogType = "website",
+  canonicalUrl,
+  noIndex = false,
 } = Astro.props;
+
+const siteUrl = "https://devpath-phi.vercel.app";
+const fullTitle = `${title} | DevPath`;
+const canonical = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
+
+// JSON-LD structured data
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "DevPath",
+  "url": siteUrl,
+  "description": description,
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "DevPath"
+  }
+};
 ---
 
 <!doctype html>
@@ -19,6 +51,33 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Canonical -->
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="DevPath" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#00e5a0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="DevPath" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
     <!-- Preload fonts -->
     <link
@@ -36,12 +95,27 @@ const {
       crossorigin
     />
 
+    <!-- Preconnect to Supabase -->
+    <link rel="preconnect" href="https://ftskdkplhtvwflywrrgg.supabase.co" />
+    <link rel="dns-prefetch" href="https://ftskdkplhtvwflywrrgg.supabase.co" />
+
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <title>{title} | DevPath</title>
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    <title>{fullTitle}</title>
   </head>
   <body class="bg-void text-text font-body">
     <slot />
+    <script>
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>
