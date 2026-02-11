@@ -1,16 +1,16 @@
 # DevPath - Project Tracker
 
-## Project Status: Phase 3 Starting
+## Project Status: Phase 3 In Progress (~60%)
 
 | Metric | Value |
 |--------|-------|
 | **Current Phase** | Phase 3: Integrated Coding Environment |
-| **Pages Built** | 45 |
-| **Overall Progress** | ~33% (Phase 1 ✅, Phase 2 ✅) |
-| **Git Commits** | 12 |
+| **Pages Built** | 46 |
+| **Overall Progress** | ~43% (Phase 1 ✅, Phase 2 ✅, Phase 3 ⏳) |
+| **Git Commits** | 14 |
 | **Deployment** | [devpath-phi.vercel.app](https://devpath-phi.vercel.app) |
 | **GitHub** | [CyberDexa/devpath](https://github.com/CyberDexa/devpath) |
-| **Next Milestone** | Monaco Editor + Multi-language Runtime |
+| **Next Milestone** | Multi-file support, terminal emulation, portfolio |
 
 ---
 
@@ -67,15 +67,43 @@
 
 ---
 
+## Phase 3: Integrated Coding Environment — ⏳ IN PROGRESS (~60%)
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Monaco Editor integration | ✅ | MonacoIDE.tsx with custom "devpath-dark" theme |
+| Code Playground page | ✅ | /playground — JS, TS, Python, HTML |
+| JS/TS execution engine | ✅ | Sandboxed Function constructor, mock console |
+| TypeScript type-stripping | ✅ | Regex-based transform for browser execution |
+| Python execution (Pyodide) | ✅ | WASM via CDN, lazy-loaded |
+| HTML preview mode | ✅ | Returns preview message |
+| Real test runner | ✅ | Input/expected output with normalization |
+| Test cases for all 17 projects | ✅ | project-tests.ts — 70+ test cases total |
+| AI code review service | ✅ | Claude/GPT + static analysis fallback |
+| Structured review display | ✅ | Score, readability, maintainability, code smells |
+| Version history (snapshots) | ✅ | LCS diff, localStorage, max 50 per project |
+| Diff view component | ✅ | Line-by-line added/removed/unchanged |
+| Auto-save (30s interval) | ✅ | With version pruning |
+| Keyboard shortcuts | ✅ | ⌘+Enter run, ⌘+S submit, ⌘+⇧+S snapshot |
+| Editor settings panel | ✅ | Font size, tab size, word wrap, minimap |
+| Phase 3 DB schema | ✅ | 4 tables: code_versions, project_files, execution_logs, ai_reviews |
+| Landing page updates | ✅ | Playground CTA, updated comparison table |
+| Multi-file support | ⬜ | File tree UI + tab system |
+| Terminal emulation | ⬜ | xterm.js integration |
+| Portfolio view | ⬜ | Completed projects gallery |
+| Public project sharing | ⬜ | Shareable links |
+
+---
+
 ## Key Metrics
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| **Pages** | 60+ | 45 |
+| **Pages** | 60+ | 46 |
 | **Roadmaps** | 5 | 5 |
 | **Projects** | 17+ | 17 |
 | **Quiz Questions** | 100+ | 56 |
-| **DB Tables** | 15+ | 12 |
+| **DB Tables** | 15+ | 16 |
 | **Build Errors** | 0 | 0 |
 | **Lighthouse Score** | 95+ | TBD |
 
@@ -97,6 +125,7 @@ npm run preview
 # Database setup
 # 1. Run supabase/schema.sql in SQL Editor
 # 2. Run supabase/phase2-schema.sql in SQL Editor
+# 3. Run supabase/phase3-schema.sql in SQL Editor
 ```
 
 ---
@@ -113,6 +142,8 @@ npm run preview
 | Database | Supabase (PostgreSQL + Auth + RLS) |
 | AI | Anthropic Claude / OpenAI GPT (hybrid) |
 | Algorithms | SM-2 Spaced Repetition |
+| Code Editor | Monaco Editor (@monaco-editor/react) |
+| Code Execution | Sandboxed JS/TS + Pyodide WASM (Python) |
 | Deployment | Vercel (static) |
 
 ---
@@ -134,6 +165,8 @@ npm run preview
 | 11 | docs: update TASKS.md and TRACKER.md | main |
 | 12 | feat: wire all components to Supabase + deploy to Vercel | main |
 | 13 | feat: Phase 2 adaptive AI learning | phase-2-adaptive-ai |
+| 14 | docs: update TRACKER.md and TASKS.md - Phase 2 complete | phase-2-adaptive-ai |
+| 15 | feat: Phase 3 - Monaco IDE, real execution, AI review, version history, playground | phase-3-coding-environment |
 
 ---
 
@@ -141,6 +174,9 @@ npm run preview
 
 - **Supabase client** uses lazy Proxy pattern to avoid SSG build errors (no env vars at build time)
 - **React islands** use `client:load` directive (NOT manual createRoot — causes Vite preamble errors)
+- **Monaco components** must use `client:only="react"` (NOT `client:load`) — Monaco cannot be server-rendered
+- **Code execution** is sandboxed: JS/TS via `new Function()` with mock console, Python via Pyodide WASM from CDN
+- **Version history** uses localStorage with max 50 snapshots per project (auto-prunes old auto-saves first)
 - **useRoadmapProgress hook** detects auth state: Supabase when logged in, localStorage fallback when not
 - **AI Tutor** tries Anthropic first, falls back to OpenAI, then to smart templates
 - **SM-2 Algorithm**: quality 0-5, easiness factor ≥1.3, interval scheduling in days
@@ -152,11 +188,11 @@ npm run preview
 
 | Phase | Focus | Timeline |
 |-------|-------|----------|
-| **Phase 3** | **Integrated Coding Environment** | **Weeks 13-18 ← NEXT** |
+| **Phase 3** | **Integrated Coding Environment** | **Weeks 13-18 ← IN PROGRESS (~60%)** |
 | Phase 4 | Gamification & Social | Weeks 19-24 |
 | Phase 5 | Career Integration | Weeks 25-30 |
 | Phase 6 | Scale & Polish | Weeks 31-36 |
 
 ---
 
-_Last updated: Session 4_
+_Last updated: Session 4 (Phase 3 in progress)_

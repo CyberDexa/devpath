@@ -22,12 +22,12 @@
 ```
 Phase 1: Foundation        [██████████] 100%
 Phase 2: Adaptive AI       [██████████] 100%
-Phase 3: Code Environment  [░░░░░░░░░░] 0%   <-- CURRENT
+Phase 3: Code Environment  [██████░░░░] 60%  <-- CURRENT
 Phase 4: Gamification      [░░░░░░░░░░] 0%
 Phase 5: Career Integration[░░░░░░░░░░] 0%
 Phase 6: Polish & Scale    [░░░░░░░░░░] 0%
 ──────────────────────────────────────────
-Overall Progress           [████░░░░░░] 33%
+Overall Progress           [████░░░░░░] 43%
 ```
 
 ---
@@ -177,25 +177,37 @@ Overall Progress           [████░░░░░░] 33%
 *Goal: Learn by doing without leaving the platform*
 
 ### Week 13-14: Editor Enhancement
-- [ ] Evaluate: WebContainers vs Monaco + Judge0
-- [ ] Integrate Monaco Editor (replace textarea)
-- [ ] Multi-file support
+- [x] Evaluate: WebContainers vs Monaco + Judge0 (chose Monaco + sandboxed execution)
+- [x] Integrate Monaco Editor (replace textarea) — MonacoIDE.tsx with custom "devpath-dark" theme
+- [x] Code Playground page with language selector (/playground)
+- [x] Keyboard shortcuts (⌘+Enter run, ⌘+S submit, ⌘+⇧+S snapshot)
+- [x] Editor settings panel (font size, tab size, word wrap, minimap)
+- [x] Phase 3 database schema (code_versions, project_files, execution_logs, ai_reviews)
+- [ ] Multi-file support (file tree UI, tab system)
 - [ ] Terminal emulation
 
 ### Week 15: Multi-Language Runtime
-- [ ] Pyodide (WASM) for Python
-- [ ] Judge0 API integration for other languages
-- [ ] Language switcher UI
+- [x] JavaScript/TypeScript execution via sandboxed Function constructor
+- [x] TypeScript type-stripping transform for browser execution
+- [x] Pyodide (WASM) for Python — lazy-loaded from CDN
+- [x] HTML preview mode
+- [x] Language switcher UI (Playground page)
+- [ ] Judge0 API integration for server-side execution
 
 ### Week 16-17: Auto-Grading & AI Review
-- [ ] Real test runner implementation
-- [ ] Claude code review integration
-- [ ] Suggestion annotations in editor
-- [ ] Improvement scoring
+- [x] Real test runner implementation (input/expected output with normalization)
+- [x] Real test cases for all 17 projects (project-tests.ts)
+- [x] Claude/GPT code review integration (code-review.ts)
+- [x] Structured review display (score, readability, maintainability, strengths, improvements)
+- [x] Static analysis fallback (when AI unavailable)
+- [x] Auto-save every 30 seconds
+- [ ] Suggestion annotations in editor (inline markers)
+- [ ] Improvement scoring history tracking
 
 ### Week 18: Version Control & Portfolio
-- [ ] Save checkpoints (snapshots)
-- [ ] Diff view component
+- [x] Save checkpoints (snapshots) — version-history.ts with localStorage
+- [x] Diff view component (LCS-based line diff algorithm)
+- [x] Version auto-pruning (max 50 per project)
 - [ ] "Completed projects" portfolio view
 - [ ] Public project sharing
 
@@ -249,6 +261,10 @@ Overall Progress           [████░░░░░░] 33%
 | 2026-02-10 | Freemium model | Maximizes reach, proven for dev tools |
 | 2026-02-10 | Lazy Proxy for Supabase client | Avoids SSG build errors when env vars missing |
 | 2026-02-10 | client:load over createRoot | Manual createRoot causes Vite preamble errors |
+| 2026-02-10 | Monaco + sandboxed execution | Monaco for editing, Function constructor for JS/TS, Pyodide WASM for Python |
+| 2026-02-10 | client:only="react" for Monaco | Monaco Editor cannot SSR; must skip server rendering entirely |
+| 2026-02-10 | localStorage for version history | Quick iteration; Supabase sync can be added later |
+| 2026-02-10 | LCS-based diff over external libs | Zero dependencies, sufficient for code snapshot diffs |
 
 ---
 
@@ -265,4 +281,4 @@ Overall Progress           [████░░░░░░] 33%
 
 ---
 
-**Last Updated**: Session 4
+**Last Updated**: Session 4 (Phase 3 in progress)

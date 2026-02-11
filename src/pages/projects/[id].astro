@@ -166,7 +166,7 @@ const diffColor = diffColors[project.difficulty] || "#888";
         {/* Code Editor */}
         <div class="xl:col-span-3">
           <ProjectEditor
-            client:load
+            client:only="react"
             projectId={project.id}
             initialCode={project.starterCode}
             language={project.language}

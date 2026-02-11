@@ -99,6 +99,11 @@ import { allRoadmaps } from "../data/roadmaps";
           </div>
           <div class="w-px h-5 bg-white/10"></div>
           <div class="flex items-center gap-2">
+            <span class="font-mono font-bold text-bright text-lg">17</span>
+            <span>Projects</span>
+          </div>
+          <div class="w-px h-5 bg-white/10"></div>
+          <div class="flex items-center gap-2">
             <span class="font-mono font-bold text-bright text-lg">50+</span>
             <span>Topics</span>
           </div>
@@ -181,10 +186,10 @@ import { allRoadmaps } from "../data/roadmaps";
           </p>
           <div class="space-y-4">
             {[
-              { icon: "▶", label: "Run code instantly", desc: "Execute with one click" },
+              { icon: "▶", label: "Run code instantly", desc: "JavaScript, TypeScript & Python" },
               { icon: "🧪", label: "Automated test suites", desc: "Validate your solution" },
-              { icon: "✨", label: "AI code review", desc: "Get instant feedback" },
-              { icon: "⌨️", label: "Real keybindings", desc: "Tab, bracket matching, shortcuts" },
+              { icon: "✨", label: "AI code review", desc: "Get structured feedback & scores" },
+              { icon: "📸", label: "Version history", desc: "Snapshots with line-by-line diff" },
             ].map((item) => (
               <div class="flex items-start gap-3">
                 <span class="w-8 h-8 rounded-lg bg-surface border border-white/8 flex items-center justify-center text-sm flex-shrink-0">{item.icon}</span>
@@ -195,9 +200,15 @@ import { allRoadmaps } from "../data/roadmaps";
               </div>
             ))}
           </div>
-          <a href="/projects" class="inline-flex items-center gap-2 mt-8 text-teal font-medium hover:text-teal-dim transition-colors">
+          <a
+            href="/projects" class="inline-flex items-center gap-2 mt-8 text-teal font-medium hover:text-teal-dim transition-colors">
             Browse challenges
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a
+            href="/playground" class="inline-flex items-center gap-2 mt-4 ml-0 lg:mt-8 lg:ml-6 text-sky font-medium hover:text-sky/80 transition-colors">
+            Open Playground
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           </a>
         </div>
 
@@ -352,6 +363,7 @@ import { allRoadmaps } from "../data/roadmaps";
             ["Adaptive AI Paths", false, true],
             ["Spaced Repetition", false, true],
             ["Integrated Code Editor", false, true],
+            ["Code Playground", false, true],
             ["Auto-graded Projects", false, true],
             ["XP & Gamification", false, true],
             ["Verified Skill Badges", false, true],

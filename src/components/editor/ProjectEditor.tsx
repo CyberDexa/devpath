@@ -1,10 +1,10 @@
 // ═══════════════════════════════════════
 // DevPath — Project Editor with Submission
-// Wraps CodeEditor with Supabase persistence
+// Wraps MonacoIDE with Supabase persistence
 // ═══════════════════════════════════════
 
 import { useState, useEffect } from 'react';
-import CodeEditor from './CodeEditor';
+import MonacoIDE from '../ide/MonacoIDE';
 import { supabase } from '../../lib/supabase';
 import { submitProject, logActivity } from '../../lib/data';
 
@@ -72,7 +72,8 @@ export default function ProjectEditor({
 
   return (
     <div className="relative">
-      <CodeEditor
+      <MonacoIDE
+        projectId={projectId}
         initialCode={initialCode}
         language={language}
         fileName={fileName}
