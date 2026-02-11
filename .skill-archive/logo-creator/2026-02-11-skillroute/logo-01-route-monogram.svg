@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5a0"/>
+      <stop offset="100%" stop-color="#00b87a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="#0a0a0f"/>
+  <!-- S letterform as a route path -->
+  <path d="M160 170 Q160 130 200 130 L260 130 Q300 130 300 170 Q300 210 260 210 L200 210 Q160 210 160 250 Q160 290 200 290 L260 290" 
+        stroke="url(#g1)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Route nodes on S -->
+  <circle cx="160" cy="170" r="8" fill="#00e5a0"/>
+  <circle cx="260" cy="290" r="8" fill="#00e5a0"/>
+  <!-- R letterform -->
+  <path d="M320 130 L320 290 M320 130 L380 130 Q410 130 410 165 Q410 200 380 200 L320 200 M340 200 L410 290" 
+        stroke="url(#g1)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Route/path line connecting bottom -->
+  <line x1="100" y1="350" x2="412" y2="350" stroke="#00e5a0" stroke-width="3" stroke-dasharray="8,6" opacity="0.4"/>
+  <circle cx="130" cy="350" r="5" fill="#00e5a0" opacity="0.6"/>
+  <circle cx="256" cy="350" r="5" fill="#00e5a0" opacity="0.6"/>
+  <circle cx="382" cy="350" r="5" fill="#00e5a0" opacity="0.6"/>
+  <!-- SKILLROUTE text -->
+  <text x="256" y="410" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="700" letter-spacing="8" fill="#ffffff" opacity="0.9">SKILLROUTE</text>
+</svg>

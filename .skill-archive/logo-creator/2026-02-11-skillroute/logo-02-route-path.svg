@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5a0"/>
+      <stop offset="50%" stop-color="#00d4a0"/>
+      <stop offset="100%" stop-color="#00b87a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="#0a0a0f"/>
+  <!-- Abstract route path forming an S shape -->
+  <path d="M140 120 L300 120 Q360 120 360 180 Q360 240 300 240 L210 240 Q150 240 150 300 Q150 360 210 360 L370 360" 
+        stroke="url(#g2)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Direction arrow at end -->
+  <polygon points="370,340 400,360 370,380" fill="#00e5a0"/>
+  <!-- Route waypoints -->
+  <circle cx="140" cy="120" r="10" fill="#0a0a0f" stroke="#00e5a0" stroke-width="4"/>
+  <circle cx="360" cy="180" r="6" fill="#00e5a0" opacity="0.5"/>
+  <circle cx="150" cy="300" r="6" fill="#00e5a0" opacity="0.5"/>
+  <circle cx="400" cy="360" r="10" fill="#00e5a0"/>
+  <!-- SKILLROUTE text -->
+  <text x="256" y="440" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" letter-spacing="6" fill="#ffffff" opacity="0.9">SKILLROUTE</text>
+</svg>

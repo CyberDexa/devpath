@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffb4"/>
+      <stop offset="100%" stop-color="#00b87a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="#0a0a0f"/>
+  <!-- Rounded square container -->
+  <rect x="96" y="56" width="320" height="320" rx="40" fill="none" stroke="#00e5a0" stroke-width="2.5" opacity="0.12"/>
+  <!-- S formed by a continuous route with direction -->
+  <path d="M180 120 C320 120, 320 120, 320 170 C320 220, 180 220, 180 260 C180 310, 320 310, 320 310 L340 310" 
+        stroke="url(#g7)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Arrow head -->
+  <polygon points="340,290 370,310 340,330" fill="#00e5a0"/>
+  <!-- Start dot -->
+  <circle cx="180" cy="120" r="12" fill="#0a0a0f" stroke="#00e5a0" stroke-width="5"/>
+  <!-- Milestone dots along the path -->
+  <circle cx="280" cy="120" r="5" fill="#0a0a0f" stroke="#00e5a0" stroke-width="2.5" opacity="0.6"/>
+  <circle cx="250" cy="220" r="5" fill="#0a0a0f" stroke="#00e5a0" stroke-width="2.5" opacity="0.6"/>
+  <circle cx="240" cy="310" r="5" fill="#0a0a0f" stroke="#00e5a0" stroke-width="2.5" opacity="0.6"/>
+  <!-- Text -->
+  <text x="256" y="430" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="800" fill="#ffffff">Skill<tspan fill="#00e5a0">Route</tspan></text>
+</svg>

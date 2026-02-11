@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g6a" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffb4"/>
+      <stop offset="100%" stop-color="#00a872"/>
+    </linearGradient>
+    <linearGradient id="g6b" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00e5a0"/>
+      <stop offset="100%" stop-color="#008f60"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="#0a0a0f"/>
+  <!-- Geometric S shape from angular segments -->
+  <g transform="translate(100, 80)">
+    <!-- Top horizontal -->
+    <rect x="40" y="0" width="200" height="48" rx="4" fill="url(#g6a)"/>
+    <!-- Middle horizontal -->
+    <rect x="72" y="114" width="200" height="48" rx="4" fill="url(#g6a)"/>
+    <!-- Bottom horizontal -->
+    <rect x="40" y="228" width="200" height="48" rx="4" fill="url(#g6a)"/>
+    <!-- Left vertical connector (top to middle) -->
+    <rect x="40" y="0" width="48" height="162" rx="4" fill="url(#g6b)"/>
+    <!-- Right vertical connector (middle to bottom) -->
+    <rect x="224" y="114" width="48" height="162" rx="4" fill="url(#g6b)"/>
+    <!-- Arrow pointer at bottom right -->
+    <polygon points="290,252 320,252 305,280" fill="#00e5a0" opacity="0.8"/>
+    <!-- Route dots -->
+    <circle cx="64" cy="24" r="8" fill="#0a0a0f"/>
+    <circle cx="248" cy="252" r="8" fill="#0a0a0f"/>
+  </g>
+  <!-- SKILLROUTE text -->
+  <text x="256" y="430" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="900" letter-spacing="4" fill="#ffffff">SKILLROUTE</text>
+  <!-- Underline accent -->
+  <rect x="120" y="445" width="272" height="3" rx="2" fill="#00e5a0" opacity="0.3"/>
+</svg>

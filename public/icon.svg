@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="teal-g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffb4"/>
+      <stop offset="55%" stop-color="#00e5a0"/>
+      <stop offset="100%" stop-color="#009d6b"/>
+    </linearGradient>
+    <filter id="gl">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="gl2">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#0a0a0f"/>
+
+  <!-- S — teal gradient with glow, centered -->
+  <g filter="url(#gl)" transform="translate(18, 40)">
+    <path d="M110 128 L220 128 Q260 128 260 168 Q260 208 220 208 L168 208 Q128 208 128 248 Q128 288 168 288 L278 288"
+          stroke="url(#teal-g)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+
+  <!-- R — white, interlocking -->
+  <g opacity="0.92" transform="translate(18, 40)">
+    <path d="M206 328 L206 128"
+          stroke="#ffffff" stroke-width="34" stroke-linecap="round" fill="none"/>
+    <path d="M206 128 L302 128 Q346 128 346 174 Q346 220 302 220 L206 220"
+          stroke="#ffffff" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M246 220 L356 328"
+          stroke="#ffffff" stroke-width="34" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Interlock node -->
+  <circle cx="224" cy="248" r="8" fill="#00e5a0" filter="url(#gl2)"/>
+  <circle cx="224" cy="248" r="3.5" fill="#ffffff"/>
+</svg>

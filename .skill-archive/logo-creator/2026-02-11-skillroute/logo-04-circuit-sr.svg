@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5a0"/>
+      <stop offset="100%" stop-color="#00c98a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="#0a0a0f"/>
+  <!-- Circuit-style SR -->
+  <!-- S as circuit path -->
+  <path d="M150 140 L280 140 L280 220 L170 220 L170 300 L300 300" 
+        stroke="url(#g4)" stroke-width="20" stroke-linecap="square" fill="none"/>
+  <!-- Circuit nodes on S -->
+  <rect x="142" y="132" width="16" height="16" fill="#00e5a0"/>
+  <rect x="272" y="132" width="16" height="16" fill="#00e5a0"/>
+  <rect x="272" y="212" width="16" height="16" fill="#00e5a0"/>
+  <rect x="162" y="212" width="16" height="16" fill="#00e5a0"/>
+  <rect x="162" y="292" width="16" height="16" fill="#00e5a0"/>
+  <rect x="292" y="292" width="16" height="16" fill="#00e5a0"/>
+  <!-- R as circuit path -->
+  <path d="M330 140 L330 300 M330 140 L410 140 L410 220 L330 220 M350 220 L420 300" 
+        stroke="url(#g4)" stroke-width="20" stroke-linecap="square" fill="none"/>
+  <!-- Circuit nodes on R -->
+  <rect x="322" y="132" width="16" height="16" fill="#00e5a0"/>
+  <rect x="402" y="132" width="16" height="16" fill="#00e5a0"/>
+  <rect x="402" y="212" width="16" height="16" fill="#00e5a0"/>
+  <rect x="322" y="292" width="16" height="16" fill="#00e5a0"/>
+  <rect x="412" y="292" width="16" height="16" fill="#00e5a0"/>
+  <!-- Connection trace -->
+  <line x1="308" y1="300" x2="322" y2="300" stroke="#00e5a0" stroke-width="4" stroke-dasharray="4,4" opacity="0.5"/>
+  <!-- SKILLROUTE text -->
+  <text x="256" y="400" text-anchor="middle" font-family="'Courier New', monospace" font-size="28" font-weight="700" letter-spacing="8" fill="#ffffff" opacity="0.85">SKILLROUTE</text>
+</svg>

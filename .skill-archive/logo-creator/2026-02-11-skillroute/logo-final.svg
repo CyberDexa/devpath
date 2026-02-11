@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffb4"/>
+      <stop offset="55%" stop-color="#00e5a0"/>
+      <stop offset="100%" stop-color="#009d6b"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-soft">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="76" fill="#0a0a0f"/>
+
+  <!-- Subtle diamond frame -->
+  <rect x="156" y="52" width="200" height="200" rx="18" fill="none" stroke="#00e5a0" stroke-width="2" opacity="0.08" transform="rotate(45 256 152)"/>
+
+  <!-- S — teal gradient with glow -->
+  <g filter="url(#glow)">
+    <path d="M138 128 L238 128 Q274 128 274 162 Q274 196 238 196 L186 196 Q150 196 150 230 Q150 264 186 264 L286 264"
+          stroke="url(#teal-grad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+
+  <!-- R — white, slightly offset to interlock with S -->
+  <g opacity="0.92">
+    <path d="M224 296 L224 128"
+          stroke="#ffffff" stroke-width="28" stroke-linecap="round" fill="none"/>
+    <path d="M224 128 L312 128 Q352 128 352 168 Q352 208 312 208 L224 208"
+          stroke="#ffffff" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M260 208 L362 296"
+          stroke="#ffffff" stroke-width="28" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Interlock glow node where S and R cross -->
+  <circle cx="224" cy="196" r="7" fill="#00e5a0" filter="url(#glow-soft)"/>
+  <circle cx="224" cy="196" r="3" fill="#ffffff"/>
+
+  <!-- Separator -->
+  <line x1="138" y1="346" x2="374" y2="346" stroke="#ffffff" stroke-width="1" opacity="0.06"/>
+
+  <!-- SKILLROUTE wordmark -->
+  <text x="256" y="396" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="22" font-weight="700" letter-spacing="11" fill="#00e5a0" opacity="0.75">SKILLROUTE</text>
+
+  <!-- Subtle tagline -->
+  <text x="256" y="432" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="11" font-weight="500" letter-spacing="5" fill="#ffffff" opacity="0.2">YOUR DEV JOURNEY</text>
+</svg>
