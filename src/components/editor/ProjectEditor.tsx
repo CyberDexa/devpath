@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Project Editor with Submission
+// SkillRoute — Project Editor with Submission
 // Wraps MonacoIDE with Supabase persistence
 // ═══════════════════════════════════════
 

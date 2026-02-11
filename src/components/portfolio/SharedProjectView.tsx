@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Shared Project Viewer
+// SkillRoute — Shared Project Viewer
 // Public view of a shared project solution
 // ═══════════════════════════════════════
 

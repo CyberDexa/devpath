@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Gamification Engine
+// SkillRoute — Gamification Engine
 // XP rules, badge checker, streak manager,
 // titles, notifications, and level system
 // ═══════════════════════════════════════

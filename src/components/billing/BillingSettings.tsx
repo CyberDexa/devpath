@@ -352,7 +352,7 @@ export default function BillingSettings() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-[var(--color-text)]">
-                        {payment.description || 'DevPath subscription'}
+                        {payment.description || 'SkillRoute subscription'}
                       </td>
                       <td className="px-6 py-4 text-[var(--color-bright)] font-medium">
                         ${(payment.amount / 100).toFixed(2)} {payment.currency.toUpperCase()}

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Terminal Emulator Component
+// SkillRoute — Terminal Emulator Component
 // Simulated interactive shell for running
 // commands in the browser sandbox
 // ═══════════════════════════════════════
@@ -50,8 +50,8 @@ interface TerminalEmulatorProps {
 // ═══════════════════════════════════════
 
 const virtualFS: Record<string, string> = {
-  '/home/dev/README.md': '# DevPath Project\n\nWelcome to your coding environment!\n',
-  '/home/dev/package.json': '{\n  "name": "devpath-sandbox",\n  "version": "1.0.0"\n}',
+  '/home/dev/README.md': '# SkillRoute Project\n\nWelcome to your coding environment!\n',
+  '/home/dev/package.json': '{\n  "name": "skillroute-sandbox",\n  "version": "1.0.0"\n}',
 };
 
 // ═══════════════════════════════════════
@@ -75,7 +75,7 @@ function executeCommand(
     case 'help':
       return [
         { type: 'info', content: '╭─────────────────────────────────────╮', timestamp: Date.now() },
-        { type: 'info', content: '│ DevPath Terminal — Available Commands│', timestamp: Date.now() },
+        { type: 'info', content: '│ SkillRoute Terminal — Available Commands│', timestamp: Date.now() },
         { type: 'info', content: '├─────────────────────────────────────┤', timestamp: Date.now() },
         { type: 'output', content: '  help          Show this help message', timestamp: Date.now() },
         { type: 'output', content: '  clear         Clear the terminal', timestamp: Date.now() },
@@ -114,7 +114,7 @@ function executeCommand(
       return [{ type: 'output', content: new Date().toString(), timestamp: Date.now() }];
 
     case 'uname':
-      return [{ type: 'output', content: 'DevPath Sandbox 1.0.0 (WASM/Browser)', timestamp: Date.now() }];
+      return [{ type: 'output', content: 'SkillRoute Sandbox 1.0.0 (WASM/Browser)', timestamp: Date.now() }];
 
     case 'ls': {
       const targetDir = args[0] ? resolvePath(tab.cwd, args[0]) : tab.cwd;
@@ -303,7 +303,7 @@ export default function TerminalEmulator({
       lines: [
         {
           type: 'info',
-          content: 'DevPath Terminal v1.0.0 — Type "help" for commands',
+          content: 'SkillRoute Terminal v1.0.0 — Type "help" for commands',
           timestamp: Date.now(),
         },
       ],
@@ -487,7 +487,7 @@ export default function TerminalEmulator({
       lines: [
         {
           type: 'info',
-          content: 'DevPath Terminal v1.0.0',
+          content: 'SkillRoute Terminal v1.0.0',
           timestamp: Date.now(),
         },
       ],

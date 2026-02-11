@@ -1,4 +1,4 @@
-# DevPath - Project Tracker
+# SkillRoute - Project Tracker
 
 ## Project Status: Phase 6 COMPLETE ✅ — ALL PHASES DONE
 
@@ -8,7 +8,7 @@
 | **Pages Built** | 87 |
 | **Overall Progress** | 100% (Phase 1 ✅, Phase 2 ✅, Phase 3 ✅, Phase 4 ✅, Phase 5 ✅, Phase 6 ✅) |
 | **Git Commits** | 19 |
-| **Deployment** | [devpath-phi.vercel.app](https://devpath-phi.vercel.app) |
+| **Deployment** | [skillroute.vercel.app](https://skillroute.vercel.app) |
 | **GitHub** | [CyberDexa/devpath](https://github.com/CyberDexa/devpath) |
 | **Status** | Feature-complete. Ready for production launch. |
 
@@ -45,7 +45,7 @@
 | Supabase integration | Client, schema (7 tables), auth, data layer |
 | Enhanced landing page | Hero, features, code preview, roadmaps, comparison, how-it-works, testimonials, CTA |
 | Responsive design verified | Mobile (375px), tablet, desktop tested |
-| Vercel deployment | devpath-phi.vercel.app with env vars |
+| Vercel deployment | skillroute.vercel.app with env vars |
 
 ---
 
@@ -71,7 +71,7 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Monaco Editor integration | ✅ | MonacoIDE.tsx with custom "devpath-dark" theme |
+| Monaco Editor integration | ✅ | MonacoIDE.tsx with custom "skillroute-dark" theme |
 | Code Playground page | ✅ | /playground — JS, TS, Python, HTML |
 | JS/TS execution engine | ✅ | Sandboxed Function constructor, mock console |
 | TypeScript type-stripping | ✅ | Regex-based transform for browser execution |

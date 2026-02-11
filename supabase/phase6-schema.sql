@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════════════════════════
--- DevPath Phase 6: Polish & Scale — Database Schema
+-- SkillRoute Phase 6: Polish & Scale — Database Schema
 -- Tables: subscriptions, payments, analytics_events,
 --         page_views, email_notifications, feature_flags,
 --         admin_audit_log

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// DevPath — Analytics & Admin Services
+// SkillRoute — Analytics & Admin Services
 // Phase 6: Tracking, billing, email, feature flags, admin
 // ═══════════════════════════════════════════════════════════
 
@@ -578,15 +578,15 @@ export async function getPaymentHistory(userId: string): Promise<Payment[]> {
 
 const EMAIL_TEMPLATES: Record<EmailType, { subject: string; body: (data: Record<string, string>) => string }> = {
   welcome: {
-    subject: 'Welcome to DevPath!',
-    body: (d) => `<h1>Welcome, ${d.name}!</h1><p>You've just joined DevPath — the AI-powered developer career platform. Start by picking a roadmap and tracking your progress.</p><a href="https://devpath-phi.vercel.app/roadmaps">Explore Roadmaps</a>`,
+    subject: 'Welcome to SkillRoute!',
+    body: (d) => `<h1>Welcome, ${d.name}!</h1><p>You've just joined SkillRoute — the AI-powered developer career platform. Start by picking a roadmap and tracking your progress.</p><a href="https://skillroute.vercel.app/roadmaps">Explore Roadmaps</a>`,
   },
   streak_reminder: {
     subject: "Don't break your streak!",
-    body: (d) => `<h1>🔥 ${d.streak}-day streak!</h1><p>You've been on fire lately. Don't break it — log in today to keep your streak alive!</p><a href="https://devpath-phi.vercel.app/challenges">Continue Learning</a>`,
+    body: (d) => `<h1>🔥 ${d.streak}-day streak!</h1><p>You've been on fire lately. Don't break it — log in today to keep your streak alive!</p><a href="https://skillroute.vercel.app/challenges">Continue Learning</a>`,
   },
   weekly_digest: {
-    subject: 'Your weekly DevPath digest',
+    subject: 'Your weekly SkillRoute digest',
     body: (d) => `<h1>📊 Weekly Recap</h1><p>This week you completed <strong>${d.topics}</strong> topics, submitted <strong>${d.projects}</strong> projects, and earned <strong>${d.xp}</strong> XP. Keep it up!</p>`,
   },
   achievement_earned: {
@@ -594,8 +594,8 @@ const EMAIL_TEMPLATES: Record<EmailType, { subject: string; body: (data: Record<
     body: (d) => `<h1>🏆 ${d.badge_name}</h1><p>Congratulations! You've earned the "${d.badge_name}" badge. Check your profile to see all your achievements.</p>`,
   },
   subscription_confirmed: {
-    subject: 'Your DevPath Pro subscription is active',
-    body: (d) => `<h1>✅ Subscription confirmed</h1><p>Welcome to DevPath ${d.plan}! You now have access to unlimited AI tutor, all projects, advanced analytics, and career tools.</p>`,
+    subject: 'Your SkillRoute Pro subscription is active',
+    body: (d) => `<h1>✅ Subscription confirmed</h1><p>Welcome to SkillRoute ${d.plan}! You now have access to unlimited AI tutor, all projects, advanced analytics, and career tools.</p>`,
   },
   subscription_canceled: {
     subject: 'Subscription canceled',
@@ -626,8 +626,8 @@ const EMAIL_TEMPLATES: Record<EmailType, { subject: string; body: (data: Record<
     body: (d) => `<h1>📜 Certificate: ${d.cert_name}</h1><p>Your certificate (${d.cert_number}) is ready. Share it with employers or add it to your portfolio.</p>`,
   },
   custom: {
-    subject: 'DevPath Update',
-    body: (d) => d.body || '<p>You have a new notification from DevPath.</p>',
+    subject: 'SkillRoute Update',
+    body: (d) => d.body || '<p>You have a new notification from SkillRoute.</p>',
   },
 };
 

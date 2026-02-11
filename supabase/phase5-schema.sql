@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════
--- DevPath — Phase 5: Career Integration
+-- SkillRoute — Phase 5: Career Integration
 -- Skill verification, certificates,
 -- portfolio, resume, job board, mock interviews
 -- ═══════════════════════════════════════

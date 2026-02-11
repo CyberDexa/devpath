@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — AI Code Review Service
+// SkillRoute — AI Code Review Service
 // Real Claude/GPT code review integration
 // ═══════════════════════════════════════
 

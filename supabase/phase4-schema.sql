@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════
--- DevPath — Phase 4: Gamification & Social
+-- SkillRoute — Phase 4: Gamification & Social
 -- Run this after schema.sql, phase2-schema.sql,
 -- and phase3-schema.sql in Supabase SQL Editor
 -- ═══════════════════════════════════════

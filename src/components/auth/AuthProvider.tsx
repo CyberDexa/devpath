@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Auth Context Provider
+// SkillRoute — Auth Context Provider
 // Provides authentication state across React components
 // ═══════════════════════════════════════
 

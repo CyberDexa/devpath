@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Supabase Database Types
+// SkillRoute — Supabase Database Types
 // Auto-generated types for the database schema
 // ═══════════════════════════════════════
 

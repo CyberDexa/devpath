@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Activity Feed Component
+// SkillRoute — Activity Feed Component
 // Social feed from followed users + own activity
 // ═══════════════════════════════════════
 

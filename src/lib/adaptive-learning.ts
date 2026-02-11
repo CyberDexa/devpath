@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Phase 2 Data Access Layer
+// SkillRoute — Phase 2 Data Access Layer
 // Quiz, Skills, Review, Learning Plans
 // ═══════════════════════════════════════
 

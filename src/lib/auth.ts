@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Authentication Utilities
+// SkillRoute — Authentication Utilities
 // ═══════════════════════════════════════
 
 import { supabase } from "./supabase";

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Projects & Challenges Data
+// SkillRoute — Projects & Challenges Data
 // ═══════════════════════════════════════
 
 export interface ProjectChallenge {
@@ -262,7 +262,7 @@ export const allProjects: ProjectChallenge[] = [
     estimatedHours: 22,
     completions: 890,
     rating: 4.8,
-    starterCode: `# deployment.yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: app\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: devpath`,
+    starterCode: `# deployment.yaml\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: app\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: skillroute`,
     language: "yaml",
     testCases: 20,
     xpReward: 900,

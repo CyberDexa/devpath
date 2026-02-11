@@ -92,7 +92,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             </svg>
           </div>
           <span className="text-xl font-bold text-white font-[family-name:var(--font-display)]">
-            DevPath
+            SkillRoute
           </span>
         </a>
         <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-display)]">

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — User Profile Card
+// SkillRoute — User Profile Card
 // Public profile with stats, badges,
 // follow/unfollow, and activity summary
 // ═══════════════════════════════════════
@@ -56,8 +56,8 @@ interface UserProfileCardProps {
 
 const SAMPLE_PROFILE: ProfileData = {
   id: 'demo',
-  username: 'devpath_user',
-  display_name: 'DevPath User',
+  username: 'skillroute_user',
+  display_name: 'SkillRoute User',
   bio: 'Full-stack developer passionate about clean code and open source.',
   avatar_url: null,
   xp: 4800,

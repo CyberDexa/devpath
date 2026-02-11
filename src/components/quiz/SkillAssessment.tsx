@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Skill Assessment Quiz Component
+// SkillRoute — Skill Assessment Quiz Component
 // Diagnostic quiz that evaluates proficiency per roadmap topic
 // ═══════════════════════════════════════
 

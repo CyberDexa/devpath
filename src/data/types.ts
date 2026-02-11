@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Core Type Definitions
+// SkillRoute — Core Type Definitions
 // ═══════════════════════════════════════
 
 export interface Resource {

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — AI Tutor Service
+// SkillRoute — AI Tutor Service
 // Handles streaming AI responses from Claude/GPT
 // Falls back to smart template responses when API keys aren't configured
 // ═══════════════════════════════════════
@@ -9,7 +9,7 @@ export interface ChatMessage {
   content: string;
 }
 
-const SYSTEM_PROMPT = `You are DevPath AI Tutor — an expert programming instructor and mentor. Your role is to help developers learn and grow.
+const SYSTEM_PROMPT = `You are SkillRoute AI Tutor — an expert programming instructor and mentor. Your role is to help developers learn and grow.
 
 Guidelines:
 - Be concise but thorough. Use markdown formatting with headers, lists, and code blocks.

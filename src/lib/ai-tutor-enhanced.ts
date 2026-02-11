@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Enhanced AI Tutor Service
+// SkillRoute — Enhanced AI Tutor Service
 // Context-aware tutoring with skill graph integration
 // ═══════════════════════════════════════
 

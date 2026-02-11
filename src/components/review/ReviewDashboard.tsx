@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Review Dashboard Component
+// SkillRoute — Review Dashboard Component
 // Spaced repetition review queue + stats
 // ═══════════════════════════════════════
 

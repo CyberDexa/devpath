@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════
--- DevPath — Phase 3 Schema Extension
+-- SkillRoute — Phase 3 Schema Extension
 -- Integrated Coding Environment tables
 -- Run AFTER schema.sql and phase2-schema.sql
 -- ═══════════════════════════════════════

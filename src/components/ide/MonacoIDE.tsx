@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Monaco IDE Component
+// SkillRoute — Monaco IDE Component
 // Full IDE with syntax highlighting,
 // real execution, test runner, AI review,
 // version history, multi-file & terminal
@@ -200,7 +200,7 @@ export default function MonacoIDE({
     editorRef.current = editor;
 
     // Custom dark theme matching our design system
-    monaco.editor.defineTheme('devpath-dark', {
+    monaco.editor.defineTheme('skillroute-dark', {
       base: 'vs-dark',
       inherit: true,
       rules: [
@@ -238,7 +238,7 @@ export default function MonacoIDE({
       },
     });
 
-    monaco.editor.setTheme('devpath-dark');
+    monaco.editor.setTheme('skillroute-dark');
 
     // Keyboard shortcuts
     editor.addAction({
@@ -678,7 +678,7 @@ export default function MonacoIDE({
               value={code}
               onChange={handleCodeChange}
               onMount={handleEditorMount}
-              theme="devpath-dark"
+              theme="skillroute-dark"
               options={{
             fontSize,
             tabSize,

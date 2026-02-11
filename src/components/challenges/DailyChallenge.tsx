@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Daily Challenge Component
+// SkillRoute — Daily Challenge Component
 // Today's coding challenge with timer,
 // hints, live editor, and submission
 // ═══════════════════════════════════════

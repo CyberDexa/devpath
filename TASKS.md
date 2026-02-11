@@ -1,4 +1,4 @@
-# DevPath - Project Tasks
+# SkillRoute - Project Tasks
 
 > **AI-Powered Developer Career Platform**
 > An enhanced roadmap.sh competitor featuring adaptive AI learning paths, integrated browser IDE, gamification mechanics, and career integration.
@@ -110,7 +110,7 @@ Overall Progress           [██████████] 100% ✅ ALL PHASES 
 - [x] Responsive mobile testing passed (375px, 768px, 1280px)
 
 ### Milestone 1 Remaining
-- [x] Deploy to production (Vercel + @astrojs/vercel adapter) — devpath-phi.vercel.app
+- [x] Deploy to production (Vercel + @astrojs/vercel adapter) — skillroute.vercel.app
 - [x] Wire ProfileDashboard to load real Supabase data
 - [x] Wire SettingsPanel to update real Supabase data
 - [x] Wire Leaderboard to real Supabase data
@@ -178,7 +178,7 @@ Overall Progress           [██████████] 100% ✅ ALL PHASES 
 
 ### Week 13-14: Editor Enhancement
 - [x] Evaluate: WebContainers vs Monaco + Judge0 (chose Monaco + sandboxed execution)
-- [x] Integrate Monaco Editor (replace textarea) — MonacoIDE.tsx with custom "devpath-dark" theme
+- [x] Integrate Monaco Editor (replace textarea) — MonacoIDE.tsx with custom "skillroute-dark" theme
 - [x] Code Playground page with language selector (/playground)
 - [x] Keyboard shortcuts (⌘+Enter run, ⌘+S submit, ⌘+⇧+S snapshot)
 - [x] Editor settings panel (font size, tab size, word wrap, minimap)

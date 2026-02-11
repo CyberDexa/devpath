@@ -1,6 +1,6 @@
 {
-  "name": "DevPath",
-  "short_name": "DevPath",
+  "name": "SkillRoute",
+  "short_name": "SkillRoute",
   "description": "AI-powered developer career platform. Adaptive roadmaps, integrated coding, gamification, and career tools.",
   "start_url": "/",
   "display": "standalone",

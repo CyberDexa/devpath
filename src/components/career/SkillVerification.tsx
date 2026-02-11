@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Skill Verification Component
+// SkillRoute — Skill Verification Component
 // Proctored challenges to verify skills
 // ═══════════════════════════════════════
 

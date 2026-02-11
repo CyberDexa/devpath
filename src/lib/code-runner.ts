@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Code Execution Engine
+// SkillRoute — Code Execution Engine
 // Real JS/TS execution in browser sandbox
 // Python via Pyodide (lazy-loaded)
 // ═══════════════════════════════════════

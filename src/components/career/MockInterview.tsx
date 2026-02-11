@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Mock Interview Component
+// SkillRoute — Mock Interview Component
 // Practice interviews with AI feedback
 // ═══════════════════════════════════════
 

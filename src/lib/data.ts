@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Data Access Layer
+// SkillRoute — Data Access Layer
 // CRUD operations for all entities
 // ═══════════════════════════════════════
 

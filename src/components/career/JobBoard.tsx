@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Job Board Component
+// SkillRoute — Job Board Component
 // Search, filter, match, apply to jobs
 // ═══════════════════════════════════════
 

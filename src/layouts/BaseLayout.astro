@@ -13,21 +13,21 @@ interface Props {
 const {
   title,
   description = "AI-powered developer career platform. Adaptive roadmaps, integrated coding, gamification, and career tools.",
-  ogImage = "https://devpath-phi.vercel.app/og-default.png",
+  ogImage = "https://skillroute.vercel.app/og-default.png",
   ogType = "website",
   canonicalUrl,
   noIndex = false,
 } = Astro.props;
 
-const siteUrl = "https://devpath-phi.vercel.app";
-const fullTitle = `${title} | DevPath`;
+const siteUrl = "https://skillroute.vercel.app";
+const fullTitle = `${title} | SkillRoute`;
 const canonical = canonicalUrl || `${siteUrl}${Astro.url.pathname}`;
 
 // JSON-LD structured data
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "DevPath",
+  "name": "SkillRoute",
   "url": siteUrl,
   "description": description,
   "applicationCategory": "EducationalApplication",
@@ -39,7 +39,7 @@ const structuredData = {
   },
   "author": {
     "@type": "Organization",
-    "name": "DevPath"
+    "name": "SkillRoute"
   }
 };
 ---
@@ -62,7 +62,7 @@ const structuredData = {
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="DevPath" />
+    <meta property="og:site_name" content="SkillRoute" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card -->
@@ -76,7 +76,7 @@ const structuredData = {
     <meta name="theme-color" content="#00e5a0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="DevPath" />
+    <meta name="apple-mobile-web-app-title" content="SkillRoute" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
 
     <!-- Preload fonts -->

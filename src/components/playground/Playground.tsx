@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Code Playground Component
+// SkillRoute — Code Playground Component
 // Language selector + MonacoIDE
 // ═══════════════════════════════════════
 
@@ -37,7 +37,7 @@ const greet = (user: User): string => {
   return \`Hello, \${user.name}! You are \${user.age}.\`;
 };
 
-console.log(greet({ name: "DevPath", age: 1 }));
+console.log(greet({ name: "SkillRoute", age: 1 }));
 
 const nums: number[] = [1, 2, 3];
 console.log("Sum:", nums.reduce((a, b) => a + b, 0));
@@ -82,7 +82,7 @@ for i in range(10):
   </style>
 </head>
 <body>
-  <h1>Hello, DevPath!</h1>
+  <h1>Hello, SkillRoute!</h1>
 </body>
 </html>`,
   },

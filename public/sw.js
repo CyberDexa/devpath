@@ -1,4 +1,4 @@
-const CACHE_NAME = 'devpath-v1';
+const CACHE_NAME = 'skillroute-v1';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',

@@ -8,7 +8,7 @@ import UserProfileCard from "../../components/social/UserProfileCard";
 export function getStaticPaths() {
   // Generate a set of sample profile pages
   const sampleUsers = [
-    'demo', 'devpath_user', 'alexchen', 'sarahkim', 'codewarrior',
+    'demo', 'skillroute_user', 'alexchen', 'sarahkim', 'codewarrior',
     'bug_hunter', 'syntaxninja', 'pixelpusher', 'stackmaster', 'loopguru'
   ];
   return sampleUsers.map((username) => ({
@@ -20,7 +20,7 @@ export function getStaticPaths() {
 const { username } = Astro.props;
 ---
 
-<BaseLayout title={`${username} — DevPath Profile`}>
+<BaseLayout title={`${username} — SkillRoute Profile`}>
   <Header />
 
   <main class="pt-20 min-h-screen">

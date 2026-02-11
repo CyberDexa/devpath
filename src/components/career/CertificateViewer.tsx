@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Certificate Viewer Component
+// SkillRoute — Certificate Viewer Component
 // View, share, verify certificates
 // ═══════════════════════════════════════
 
@@ -94,7 +94,7 @@ export default function CertificateViewer({ userId, certificateNumber }: Props) 
   }
 
   function copyLink(certNum: string) {
-    navigator.clipboard.writeText(`https://devpath-phi.vercel.app/certificates?verify=${certNum}`);
+    navigator.clipboard.writeText(`https://skillroute.vercel.app/certificates?verify=${certNum}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -171,13 +171,13 @@ export default function CertificateViewer({ userId, certificateNumber }: Props) 
                 </div>
               </div>
 
-              <p className="text-teal/60 uppercase tracking-[0.3em] text-xs font-medium mb-2">DevPath Certificate of</p>
+              <p className="text-teal/60 uppercase tracking-[0.3em] text-xs font-medium mb-2">SkillRoute Certificate of</p>
               <h1 className="text-3xl font-bold text-white mb-1">{CERT_LABEL[type]}</h1>
               <p className="text-gray-400 text-sm mb-8">This certifies that</p>
 
               {/* Recipient */}
               <p className="text-2xl font-bold text-white mb-8">
-                {cert.profiles?.display_name || cert.profiles?.username || 'DevPath User'}
+                {cert.profiles?.display_name || cert.profiles?.username || 'SkillRoute User'}
               </p>
 
               {/* Title */}
@@ -226,7 +226,7 @@ export default function CertificateViewer({ userId, certificateNumber }: Props) 
             onClick={() => {
               if (typeof window !== 'undefined') {
                 window.open(
-                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(`I just earned my "${cert.title}" certificate on DevPath! 🎉\n\nVerify: https://devpath-phi.vercel.app/certificates?verify=${cert.certificate_number}`)}`,
+                  `https://twitter.com/intent/tweet?text=${encodeURIComponent(`I just earned my "${cert.title}" certificate on SkillRoute! 🎉\n\nVerify: https://skillroute.vercel.app/certificates?verify=${cert.certificate_number}`)}`,
                   '_blank'
                 );
               }

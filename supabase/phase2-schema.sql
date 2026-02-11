@@ -1,5 +1,5 @@
 -- ═══════════════════════════════════════
--- DevPath — Phase 2: Adaptive AI Learning
+-- SkillRoute — Phase 2: Adaptive AI Learning
 -- Run AFTER schema.sql in Supabase SQL Editor
 -- ═══════════════════════════════════════
 

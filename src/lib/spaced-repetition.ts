@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Spaced Repetition Engine
+// SkillRoute — Spaced Repetition Engine
 // SM-2 algorithm implementation for optimal review scheduling
 // ═══════════════════════════════════════
 

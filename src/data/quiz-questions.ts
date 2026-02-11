@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Quiz Question Bank
+// SkillRoute — Quiz Question Bank
 // Diagnostic + review questions per roadmap topic
 // ═══════════════════════════════════════
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Supabase Client Configuration
+// SkillRoute — Supabase Client Configuration
 // Lazy-initialized to avoid SSG build errors
 // ═══════════════════════════════════════
 

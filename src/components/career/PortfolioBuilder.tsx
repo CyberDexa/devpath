@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Portfolio Builder Component
+// SkillRoute — Portfolio Builder Component
 // Build a shareable developer portfolio
 // ═══════════════════════════════════════
 
@@ -238,7 +238,7 @@ export default function PortfolioBuilder({ userId }: Props) {
                 <div>
                   <label className="text-sm text-gray-400 block mb-1.5">Portfolio URL Slug *</label>
                   <div className="flex items-center">
-                    <span className="text-gray-500 text-sm mr-2">devpath-phi.vercel.app/portfolio/</span>
+                    <span className="text-gray-500 text-sm mr-2">skillroute.vercel.app/portfolio/</span>
                     <input
                       type="text"
                       value={form.slug}
@@ -337,7 +337,7 @@ export default function PortfolioBuilder({ userId }: Props) {
               {[
                 {
                   key: 'showStats',
-                  label: 'DevPath Stats',
+                  label: 'SkillRoute Stats',
                   desc: 'Show your level, XP, streak, and progress',
                   icon: BarChart3,
                 },
@@ -454,7 +454,7 @@ export default function PortfolioBuilder({ userId }: Props) {
                   {form.seoTitle || form.title || 'Portfolio Title'}
                 </p>
                 <p className="text-green-400 text-xs font-mono truncate">
-                  devpath-phi.vercel.app/portfolio/{form.slug || 'your-slug'}
+                  skillroute.vercel.app/portfolio/{form.slug || 'your-slug'}
                 </p>
                 <p className="text-gray-400 text-sm mt-1 line-clamp-2">
                   {form.seoDescription || form.tagline || 'Your portfolio description will appear here...'}

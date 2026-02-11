@@ -96,7 +96,7 @@ const CATEGORIES: NotificationCategory[] = [
     icon: Mail,
     color: 'text-rose-400',
     items: [
-      { key: 'product_updates', label: 'Product Updates', description: 'New features, platform updates, and DevPath news' },
+      { key: 'product_updates', label: 'Product Updates', description: 'New features, platform updates, and SkillRoute news' },
     ],
   },
 ];

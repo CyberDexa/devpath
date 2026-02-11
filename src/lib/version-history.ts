@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Version History Service
+// SkillRoute — Version History Service
 // Code snapshots with diff view
 // ═══════════════════════════════════════
 
@@ -92,7 +92,7 @@ export function getDiffStats(diff: DiffLine[]): { added: number; removed: number
 // Local Version Store (localStorage)
 // ═══════════════════════════════════════
 
-const STORAGE_KEY = 'devpath_code_versions';
+const STORAGE_KEY = 'skillroute_code_versions';
 
 function getStorageKey(projectId: string): string {
   return `${STORAGE_KEY}_${projectId}`;

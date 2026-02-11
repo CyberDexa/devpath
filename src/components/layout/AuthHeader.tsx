@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Auth-Aware Header (React Island)
+// SkillRoute — Auth-Aware Header (React Island)
 // Shows user avatar + dropdown when authenticated
 // ═══════════════════════════════════════
 

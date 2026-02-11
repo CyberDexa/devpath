@@ -111,7 +111,7 @@ function ProfileSettings({ userId, initialData }: { userId: string; initialData:
 
   return (
     <div className="space-y-6">
-      <SectionCard title="Avatar" description="Your profile picture visible across DevPath">
+      <SectionCard title="Avatar" description="Your profile picture visible across SkillRoute">
         <div className="flex items-center gap-5">
           <div className="relative group">
             <div className="w-20 h-20 rounded-full bg-[var(--color-charcoal)] flex items-center justify-center overflow-hidden">
@@ -143,7 +143,7 @@ function ProfileSettings({ userId, initialData }: { userId: string; initialData:
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="username"
-            hint="devpath.dev/@username"
+            hint="skillroute.dev/@username"
           />
         </div>
         <Textarea
@@ -376,7 +376,7 @@ function PrivacySettings() {
         </SettingRow>
       </SectionCard>
 
-      <SectionCard title="Discoverability" description="How others can find you on DevPath">
+      <SectionCard title="Discoverability" description="How others can find you on SkillRoute">
         <SettingRow label="Leaderboard" description="Appear on the public leaderboard">
           <Toggle checked={showOnLeaderboard} onChange={setShowOnLeaderboard} />
         </SettingRow>
@@ -408,7 +408,7 @@ function EditorSettings() {
   const [bracketPairs, setBracketPairs] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
   const [vimMode, setVimMode] = useState(false);
-  const [editorTheme, setEditorTheme] = useState('devpath-dark');
+  const [editorTheme, setEditorTheme] = useState('skillroute-dark');
 
   return (
     <div className="space-y-6">
@@ -440,7 +440,7 @@ function EditorSettings() {
         <Select
           label="Editor Theme"
           options={[
-            { value: 'devpath-dark', label: 'DevPath Dark', description: 'Our custom dark theme' },
+            { value: 'skillroute-dark', label: 'SkillRoute Dark', description: 'Our custom dark theme' },
             { value: 'github-dark', label: 'GitHub Dark' },
             { value: 'one-dark-pro', label: 'One Dark Pro' },
             { value: 'dracula', label: 'Dracula' },
@@ -619,7 +619,7 @@ function AccountSettings({ userId }: { userId: string }) {
             <LogOut size={18} className="text-[var(--color-steel)]" />
             <div>
               <p className="text-sm font-medium text-white">Sign Out</p>
-              <p className="text-xs text-[var(--color-steel)]">Log out of your DevPath account</p>
+              <p className="text-xs text-[var(--color-steel)]">Log out of your SkillRoute account</p>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>

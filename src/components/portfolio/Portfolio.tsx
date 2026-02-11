@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Project Portfolio Component
+// SkillRoute — Project Portfolio Component
 // Showcases completed projects with code
 // previews, stats, and sharing
 // ═══════════════════════════════════════

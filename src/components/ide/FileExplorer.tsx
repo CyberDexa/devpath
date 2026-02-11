@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — File Explorer & Tab System
+// SkillRoute — File Explorer & Tab System
 // Multi-file project management with
 // tree view, tabs, and file operations
 // ═══════════════════════════════════════

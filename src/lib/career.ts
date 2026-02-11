@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Career Services Engine
+// SkillRoute — Career Services Engine
 // Skill verification, certificates,
 // portfolio, resume, job matching,
 // mock interviews
@@ -392,8 +392,8 @@ export async function issueCertificate(
       certificate_number: generateCertificateNumber(),
       is_public: true,
       metadata: {
-        issued_by: 'DevPath',
-        platform_url: 'https://devpath-phi.vercel.app',
+        issued_by: 'SkillRoute',
+        platform_url: 'https://skillroute.vercel.app',
       },
     })
     .select()
@@ -612,7 +612,7 @@ export async function generateAIResumeSuggestions(
       passedVerifications.length > 0
         ? `Verified skills in ${skills.slice(0, 3).join(', ')}.`
         : 'Eager to apply practical skills to real-world challenges.'
-    } ${certs.length > 0 ? `Holds ${certs.length} professional certification(s).` : ''} Level ${profile?.level || 1} on DevPath with ${profile?.xp?.toLocaleString() || 0} XP earned through hands-on projects and challenges.`,
+    } ${certs.length > 0 ? `Holds ${certs.length} professional certification(s).` : ''} Level ${profile?.level || 1} on SkillRoute with ${profile?.xp?.toLocaleString() || 0} XP earned through hands-on projects and challenges.`,
     skills,
     improvements: [
       passedVerifications.length < 3 ? 'Complete more skill verifications to strengthen your profile' : '',

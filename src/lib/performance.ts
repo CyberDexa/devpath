@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════
-// DevPath — Performance Utilities
+// SkillRoute — Performance Utilities
 // Phase 6: Lazy loading, resource hints, image optimization
 // ═══════════════════════════════════════════════════════════
 

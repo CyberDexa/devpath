@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — useRoadmapProgress Hook
+// SkillRoute — useRoadmapProgress Hook
 // Loads & persists roadmap progress via Supabase
 // Falls back to localStorage when not authenticated
 // ═══════════════════════════════════════
@@ -13,7 +13,7 @@ import {
   logActivity,
 } from '../lib/data';
 
-const LOCAL_STORAGE_KEY = 'devpath_roadmap_progress';
+const LOCAL_STORAGE_KEY = 'skillroute_roadmap_progress';
 
 function getLocalProgress(roadmapId: string): Record<string, NodeStatus> {
   try {

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Code Battles Component
+// SkillRoute — Code Battles Component
 // 1v1 timed coding challenges with
 // lobby, active battle, and results views
 // ═══════════════════════════════════════

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Notification Panel
+// SkillRoute — Notification Panel
 // Real-time notifications dropdown with
 // badge awards, level ups, follows,
 // battle invites, and more

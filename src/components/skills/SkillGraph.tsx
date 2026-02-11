@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Skill Graph Visualization
+// SkillRoute — Skill Graph Visualization
 // Radar chart showing proficiency across topics
 // ═══════════════════════════════════════
 

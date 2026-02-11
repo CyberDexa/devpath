@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// DevPath — Resume Builder Component
+// SkillRoute — Resume Builder Component
 // Build, edit, and export resumes
 // ═══════════════════════════════════════
 
