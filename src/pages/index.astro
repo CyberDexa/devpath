@@ -260,6 +260,80 @@ import { allRoadmaps } from "../data/roadmaps";
 
   <!-- Roadmaps Preview -->
   <section class="relative py-24 lg:py-32 bg-abyss border-y border-white/5">
+
+    <!-- Gamification & Social Section -->
+    <div class="max-w-7xl mx-auto px-6 mb-24 lg:mb-32">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber/10 border border-amber/20 text-amber text-xs font-medium mb-6">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          New: Gamification & Social
+        </div>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bright mb-4">
+          Learn together, <span class="text-gradient">level up faster</span>
+        </h2>
+        <p class="text-dim text-lg max-w-xl mx-auto">
+          Daily challenges, 1v1 code battles, streaks, badges, and a social feed — making learning addictive.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          {
+            icon: "🔥",
+            title: "Daily Challenges",
+            desc: "New coding challenge every day. Build a streak, earn XP, and unlock exclusive badges. Progressive hints keep you moving.",
+            href: "/challenges",
+            color: "amber",
+          },
+          {
+            icon: "⚔️",
+            title: "Code Battles",
+            desc: "Challenge others to timed 1v1 coding duels. Solve problems fastest to claim victory and climb the battle rankings.",
+            href: "/battles",
+            color: "rose",
+          },
+          {
+            icon: "🏆",
+            title: "30+ Badges",
+            desc: "Unlock achievements for milestones, streaks, challenges, battles, and social activity. Showcase them on your profile.",
+            href: "/profile",
+            color: "violet",
+          },
+          {
+            icon: "📊",
+            title: "Live Leaderboards",
+            desc: "Compete weekly, monthly, or all-time across XP, streaks, projects, and battles. Filter by category and time period.",
+            href: "/leaderboard",
+            color: "teal",
+          },
+          {
+            icon: "👥",
+            title: "Social Feed & Follows",
+            desc: "Follow developers, see their achievements, and stay motivated by the community's progress in a real-time activity feed.",
+            href: "/feed",
+            color: "sky",
+          },
+          {
+            icon: "🎓",
+            title: "Mentor Directory",
+            desc: "Earn mentor status by mastering topics. Help others on their journey and get recognized as a community leader.",
+            href: "/leaderboard",
+            color: "emerald",
+          },
+        ].map((feature) => (
+          <a
+            href={feature.href}
+            class="group block rounded-xl bg-surface border border-white/5 p-6 hover:border-teal/15 transition-all duration-300 hover:shadow-glow"
+          >
+            <span class="text-3xl mb-4 block">{feature.icon}</span>
+            <h3 class="font-display font-bold text-bright text-base mb-2 group-hover:text-teal transition-colors">
+              {feature.title}
+            </h3>
+            <p class="text-sm text-dim leading-relaxed">{feature.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-end justify-between mb-12">
         <div>
@@ -366,6 +440,9 @@ import { allRoadmaps } from "../data/roadmaps";
             ["Code Playground", false, true],
             ["Auto-graded Projects", false, true],
             ["XP & Gamification", false, true],
+            ["Daily Challenges", false, true],
+            ["1v1 Code Battles", false, true],
+            ["Social Feed & Follows", false, true],
             ["Verified Skill Badges", false, true],
             ["Job Matching", false, true],
             ["AI Code Review", false, true],

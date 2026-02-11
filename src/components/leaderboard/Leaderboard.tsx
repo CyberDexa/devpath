@@ -16,9 +16,11 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { supabase } from '../../lib/supabase';
-import { getLeaderboard } from '../../lib/data';
+import { getLeaderboard as getLeaderboardLegacy } from '../../lib/data';
+import { getLeaderboard as getLeaderboardEnhanced } from '../../lib/gamification';
 
 type TimeFilter = 'weekly' | 'monthly' | 'alltime';
+type CategoryFilter = 'xp' | 'streak' | 'projects' | 'battles';
 
 interface LeaderboardUser {
   rank: number;
@@ -102,15 +104,17 @@ function TopThreeCard({ user, position }: { user: LeaderboardUser; position: 1 |
 
 export function Leaderboard() {
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('alltime');
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('xp');
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<LeaderboardUser[]>([]);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     loadLeaderboard();
-  }, []);
+  }, [timeFilter, categoryFilter]);
 
   async function loadLeaderboard() {
+    setLoading(true);
     try {
       // Get current user
       const { data: { session } } = await supabase.auth.getSession();
@@ -118,8 +122,15 @@ export function Leaderboard() {
         setCurrentUserId(session.user.id);
       }
 
-      // Fetch leaderboard
-      const data = await getLeaderboard(50);
+      // Try enhanced leaderboard first (supports time/category), fall back to legacy
+      let data: any[] | null = null;
+      try {
+        const period = timeFilter === 'alltime' ? 'all-time' : timeFilter;
+        data = await getLeaderboardEnhanced(period, categoryFilter, 50);
+      } catch {
+        data = await getLeaderboardLegacy(50);
+      }
+
       if (data) {
         const ranked = data.map((u: any, i: number) => ({
           rank: i + 1,
@@ -178,7 +189,7 @@ export function Leaderboard() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center justify-center gap-4 mb-10">
+      <div className="flex flex-col items-center gap-3 mb-10">
         <div className="flex items-center gap-1 bg-[var(--color-abyss)] rounded-xl border border-[var(--color-charcoal)] p-1">
           {([
             { value: 'weekly', label: 'This Week', icon: <Calendar size={13} /> },
@@ -196,6 +207,29 @@ export function Leaderboard() {
               )}
             >
               {opt.icon}
+              {opt.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Category filter */}
+        <div className="flex items-center gap-1 bg-[var(--color-abyss)] rounded-xl border border-[var(--color-charcoal)] p-1">
+          {([
+            { value: 'xp' as const, label: 'XP' },
+            { value: 'streak' as const, label: 'Streak' },
+            { value: 'projects' as const, label: 'Projects' },
+            { value: 'battles' as const, label: 'Battles' },
+          ]).map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setCategoryFilter(opt.value)}
+              className={clsx(
+                'px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                categoryFilter === opt.value
+                  ? 'bg-[var(--color-accent-teal)]/10 text-[var(--color-accent-teal)]'
+                  : 'text-[var(--color-steel)] hover:text-white'
+              )}
+            >
               {opt.label}
             </button>
           ))}

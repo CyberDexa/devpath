@@ -246,8 +246,13 @@ export default function ProfileDashboard() {
     );
   }
 
-  const xpToNext = Math.pow(profile.level, 2) * 100;
-  const xpProgress = Math.min(100, Math.round((profile.xp / Math.max(xpToNext, 1)) * 100));
+  // Unified XP formula: level = floor(sqrt(xp/100)) + 1
+  // XP needed for next level = level^2 * 100 (total), current level threshold = (level-1)^2 * 100
+  const currentLevelXp = Math.pow(profile.level - 1, 2) * 100;
+  const nextLevelXp = Math.pow(profile.level, 2) * 100;
+  const xpInLevel = profile.xp - currentLevelXp;
+  const xpNeeded = nextLevelXp - currentLevelXp;
+  const xpProgress = xpNeeded > 0 ? Math.min(100, Math.round((xpInLevel / xpNeeded) * 100)) : 100;
   const completedTopics = roadmapProgress.reduce((sum, rp) => {
     const statuses = rp.node_statuses || {};
     return sum + Object.values(statuses).filter((s) => s === 'completed').length;
@@ -333,7 +338,7 @@ export default function ProfileDashboard() {
         <div className="mt-6 pt-6 border-t border-white/[0.06]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-[var(--color-steel)]">Level {profile.level} Progress</span>
-            <span className="text-xs font-mono text-[var(--color-accent-teal)]">{profile.xp.toLocaleString()} / {xpToNext.toLocaleString()} XP</span>
+            <span className="text-xs font-mono text-[var(--color-accent-teal)]">{xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP</span>
           </div>
           <ProgressBar value={xpProgress} showLabel={false} />
         </div>

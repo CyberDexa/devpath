@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/layout/Header.astro";
+import UserProfileCard from "../../components/social/UserProfileCard";
+
+// Static paths — generate pages for sample users in static builds
+// In production, this would use SSR or a list from the database
+export function getStaticPaths() {
+  // Generate a set of sample profile pages
+  const sampleUsers = [
+    'demo', 'devpath_user', 'alexchen', 'sarahkim', 'codewarrior',
+    'bug_hunter', 'syntaxninja', 'pixelpusher', 'stackmaster', 'loopguru'
+  ];
+  return sampleUsers.map((username) => ({
+    params: { username },
+    props: { username },
+  }));
+}
+
+const { username } = Astro.props;
+---
+
+<BaseLayout title={`${username} — DevPath Profile`}>
+  <Header />
+
+  <main class="pt-20 min-h-screen">
+    <div class="max-w-2xl mx-auto px-6 py-8">
+      <UserProfileCard client:load username={username} />
+    </div>
+  </main>
+</BaseLayout>
