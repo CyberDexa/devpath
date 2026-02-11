@@ -1,20 +1,21 @@
 # DevPath - Project Tracker
 
-## Project Status: Phase 1 Nearing Completion
+## Project Status: Phase 3 Starting
 
 | Metric | Value |
 |--------|-------|
-| **Current Phase** | Phase 1: Foundation |
-| **Pages Built** | 34 |
-| **Overall Progress** | ~95% of Phase 1 |
-| **Git Commits** | 10 |
-| **Next Milestone** | Deploy to Vercel |
+| **Current Phase** | Phase 3: Integrated Coding Environment |
+| **Pages Built** | 45 |
+| **Overall Progress** | ~33% (Phase 1 ✅, Phase 2 ✅) |
+| **Git Commits** | 12 |
+| **Deployment** | [devpath-phi.vercel.app](https://devpath-phi.vercel.app) |
+| **GitHub** | [CyberDexa/devpath](https://github.com/CyberDexa/devpath) |
+| **Next Milestone** | Monaco Editor + Multi-language Runtime |
 
 ---
 
-## Phase 1 Completion Status
+## Phase 1: Foundation — ✅ COMPLETE
 
-### Done
 | Feature | Notes |
 |---------|-------|
 | Astro + React + Tailwind scaffold | v5.17 + 19.2 + 4.1 |
@@ -31,12 +32,12 @@
 | Roadmaps explore page | Search, filter, sort |
 | Auth pages (login/signup) | Wired to Supabase signUp/signIn/OAuth |
 | OAuth callback page | PKCE + hash token handling |
-| Profile dashboard | Heatmap, badges, activity, stats |
-| Settings page (6 tabs) | Profile, Notifications, Appearance, Privacy, Editor, Account |
+| Profile dashboard | Real Supabase data — heatmap, badges, activity, stats |
+| Settings page (6 tabs) | Wired to Supabase — Profile, Notifications, Appearance, Privacy, Editor, Account |
 | 404 page (terminal-style) | Interactive terminal Easter egg |
 | Pricing page (3-tier) | Freemium/Pro/Teams, comparison table, FAQ |
 | AI Tutor chat UI | Real API (Claude/GPT) with template fallback |
-| Leaderboard | Podium, ranked table, time filters |
+| Leaderboard | Real Supabase data — podium, ranked table, time filters |
 | Projects catalog (17 projects) | Grid/list views, search, filter, sort, detail modal |
 | Code Editor component | Full IDE with run/test/AI review |
 | Project submissions | Wired to Supabase with XP rewards |
@@ -44,17 +45,25 @@
 | Supabase integration | Client, schema (7 tables), auth, data layer |
 | Enhanced landing page | Hero, features, code preview, roadmaps, comparison, how-it-works, testimonials, CTA |
 | Responsive design verified | Mobile (375px), tablet, desktop tested |
+| Vercel deployment | devpath-phi.vercel.app with env vars |
 
-### Remaining for Phase 1
-| Feature | Priority | Est. |
-|---------|----------|------|
-| Deploy to Vercel | P0 | 1h |
-| Create Supabase project and seed | P0 | 30m |
-| Wire ProfileDashboard to real data | P1 | 2h |
-| Wire SettingsPanel to real data | P1 | 2h |
-| Wire Leaderboard to real data | P2 | 1h |
-| SEO meta tags and Open Graph | P1 | 1h |
-| Lighthouse optimization | P2 | 2h |
+---
+
+## Phase 2: Adaptive AI Learning — ✅ COMPLETE
+
+| Feature | Notes |
+|---------|-------|
+| Skill Assessment Quiz System | 56 questions across 5 roadmaps, diagnostic + review modes |
+| Quiz UI (SkillAssessment.tsx) | Animated intro → quiz → results, per-node scoring, timer |
+| Assessment pages | /assess/[id] for all 5 roadmaps |
+| Spaced Repetition Engine | SM-2 algorithm (quality 0-5, easiness factor, intervals) |
+| Review Dashboard | Dashboard + session mode, strength bars, schedule, stats |
+| Review page | /review with full spaced repetition UI |
+| Skill Graph Visualization | SVG radar chart, proficiency bars, recommended next steps |
+| Skills pages | /skills/[id] for all 5 roadmaps |
+| Enhanced AI Tutor | Context injection (skill graph + topic + level), learning plans |
+| Database schema extension | 5 new tables (quiz_questions, quiz_attempts, user_skills, review_items, learning_plans) |
+| Navigation update | "Review" link in header, "Assess Skills" CTAs on roadmap pages |
 
 ---
 
@@ -62,9 +71,11 @@
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| **Pages** | 40+ | 34 |
+| **Pages** | 60+ | 45 |
 | **Roadmaps** | 5 | 5 |
 | **Projects** | 17+ | 17 |
+| **Quiz Questions** | 100+ | 56 |
+| **DB Tables** | 15+ | 12 |
 | **Build Errors** | 0 | 0 |
 | **Lighthouse Score** | 95+ | TBD |
 
@@ -83,8 +94,9 @@ npm run build
 # Preview production build
 npm run preview
 
-# Database setup (after creating Supabase project)
-# Run supabase/schema.sql in SQL Editor
+# Database setup
+# 1. Run supabase/schema.sql in SQL Editor
+# 2. Run supabase/phase2-schema.sql in SQL Editor
 ```
 
 ---
@@ -100,47 +112,51 @@ npm run preview
 | Icons | Lucide React |
 | Database | Supabase (PostgreSQL + Auth + RLS) |
 | AI | Anthropic Claude / OpenAI GPT (hybrid) |
-| Deployment | Vercel (planned) |
+| Algorithms | SM-2 Spaced Repetition |
+| Deployment | Vercel (static) |
 
 ---
 
 ## Git History
 
-| # | Message | Scope |
-|---|---------|-------|
-| 1 | feat: initial Astro scaffold + design system | Project init, fonts, tokens |
-| 2 | feat: interactive roadmap viewer + all pages | Viewer, data, pages |
-| 3 | feat: settings, 404, mobile nav, explore view | New components |
-| 4 | feat: pricing page, AI tutor chat, leaderboard | Feature pages |
-| 5 | feat: projects catalog + code editor | 17 projects, IDE |
-| 6 | feat: Supabase integration | Schema, auth, data layer |
-| 7 | feat: enhanced landing page | Sections, animations |
-| 8 | feat: enhanced landing page with code preview | Code editor preview |
-| 9 | feat: wire auth, roadmap progress, project submissions | Backend wiring |
-| 10 | feat: AI tutor real API integration | Claude/GPT service |
+| # | Message | Branch |
+|---|---------|--------|
+| 1 | feat: initial Astro scaffold + design system | main |
+| 2 | feat: interactive roadmap viewer + all pages | main |
+| 3 | feat: settings, 404, mobile nav, explore view | main |
+| 4 | feat: pricing page, AI tutor chat, leaderboard | main |
+| 5 | feat: projects catalog + code editor | main |
+| 6 | feat: Supabase integration | main |
+| 7 | feat: enhanced landing page | main |
+| 8 | feat: enhanced landing page with code preview | main |
+| 9 | feat: wire auth, roadmap progress, project submissions | main |
+| 10 | feat: AI tutor real API integration | main |
+| 11 | docs: update TASKS.md and TRACKER.md | main |
+| 12 | feat: wire all components to Supabase + deploy to Vercel | main |
+| 13 | feat: Phase 2 adaptive AI learning | phase-2-adaptive-ai |
 
 ---
 
 ## Architecture Notes
 
 - **Supabase client** uses lazy Proxy pattern to avoid SSG build errors (no env vars at build time)
-- **React islands** use `client:load` directive (NOT manual createRoot - causes Vite preamble errors)
+- **React islands** use `client:load` directive (NOT manual createRoot — causes Vite preamble errors)
 - **useRoadmapProgress hook** detects auth state: Supabase when logged in, localStorage fallback when not
 - **AI Tutor** tries Anthropic first, falls back to OpenAI, then to smart templates
+- **SM-2 Algorithm**: quality 0-5, easiness factor ≥1.3, interval scheduling in days
 - **XP formula**: level = floor(sqrt(xp/100)) + 1
 
 ---
 
-## Phase 2+ Roadmap
+## Upcoming Phases
 
 | Phase | Focus | Timeline |
 |-------|-------|----------|
-| Phase 2 | Adaptive Learning Engine | Weeks 7-12 |
-| Phase 3 | Advanced Code Environment | Weeks 13-18 |
+| **Phase 3** | **Integrated Coding Environment** | **Weeks 13-18 ← NEXT** |
 | Phase 4 | Gamification & Social | Weeks 19-24 |
 | Phase 5 | Career Integration | Weeks 25-30 |
 | Phase 6 | Scale & Polish | Weeks 31-36 |
 
 ---
 
-_Last updated: Session 2_
+_Last updated: Session 4_
