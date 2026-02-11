@@ -1,16 +1,16 @@
 # DevPath - Project Tracker
 
-## Project Status: Phase 3 COMPLETE ✅
+## Project Status: Phase 4 COMPLETE ✅
 
 | Metric | Value |
 |--------|-------|
-| **Current Phase** | Phase 3: Integrated Coding Environment — ✅ DONE |
-| **Pages Built** | 64 |
-| **Overall Progress** | ~50% (Phase 1 ✅, Phase 2 ✅, Phase 3 ✅) |
-| **Git Commits** | 16 |
+| **Current Phase** | Phase 4: Gamification & Social — ✅ DONE |
+| **Pages Built** | 77 |
+| **Overall Progress** | ~67% (Phase 1 ✅, Phase 2 ✅, Phase 3 ✅, Phase 4 ✅) |
+| **Git Commits** | 17 |
 | **Deployment** | [devpath-phi.vercel.app](https://devpath-phi.vercel.app) |
 | **GitHub** | [CyberDexa/devpath](https://github.com/CyberDexa/devpath) |
-| **Next Milestone** | Phase 4: Gamification & Social |
+| **Next Milestone** | Phase 5: Career Integration |
 
 ---
 
@@ -95,15 +95,38 @@
 
 ---
 
+## Phase 4: Gamification & Social — ✅ COMPLETE
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Gamification engine | ✅ | gamification.ts — unified XP, streaks, badges, leaderboard, notifications, social, challenges, battles |
+| Unified XP & leveling | ✅ | level = floor(sqrt(xp/100)) + 1, XP rewards for 25+ action types, title progression (11 titles) |
+| Streak tracking | ✅ | Daily activity recording, consecutive day calculation, milestone bonuses (7/14/30/60/100 days) |
+| Badge evaluation engine | ✅ | 30+ badges across 6 categories, automatic stat-based evaluation + award + notification |
+| Daily coding challenges | ✅ | DailyChallenge.tsx — timer, progressive hints, test runner, completion state, 7 seeded challenges |
+| Code Battles (1v1) | ✅ | CodeBattles.tsx — lobby, create battle, timed arena, test runner, results, XP rewards |
+| Activity Feed | ✅ | ActivityFeed.tsx — 17 activity types, social/personal modes, filters (All/Achievements/Challenges/Learning) |
+| Notification panel | ✅ | NotificationPanel.tsx — bell dropdown, 9 notification types, mark read, 30s polling |
+| User profile cards | ✅ | UserProfileCard.tsx — public profile, stats, badges, follow/unfollow, XP progress bar |
+| Social follows | ✅ | Follow/unfollow with notifications, follower/following counts, activity feed from followed users |
+| Enhanced leaderboard | ✅ | Time filters (weekly/monthly/all-time) + category tabs (XP/streak/projects/battles) wired up |
+| ProfileDashboard XP fix | ✅ | Replaced inconsistent XP formula with unified calculation |
+| Phase 4 DB schema | ✅ | 7 new tables, profile extensions, 18 new badges, 7 sample challenges, full RLS policies |
+| New pages | ✅ | /challenges, /battles, /feed, /users/[username] (10 paths) |
+| Header + landing updates | ✅ | Nav links (Challenges/Battles/Feed), gamification showcase section, updated comparison table |
+
+---
+
 ## Key Metrics
 
 | Metric | Target | Current |
 |--------|--------|---------|
-| **Pages** | 60+ | 64 |
+| **Pages** | 70+ | 77 |
 | **Roadmaps** | 5 | 5 |
 | **Projects** | 17+ | 17 |
 | **Quiz Questions** | 100+ | 56 |
-| **DB Tables** | 15+ | 16 |
+| **DB Tables** | 20+ | 23 |
+| **Badges** | 30+ | 32 |
 | **Build Errors** | 0 | 0 |
 | **Lighthouse Score** | 95+ | TBD |
 
@@ -126,6 +149,7 @@ npm run preview
 # 1. Run supabase/schema.sql in SQL Editor
 # 2. Run supabase/phase2-schema.sql in SQL Editor
 # 3. Run supabase/phase3-schema.sql in SQL Editor
+# 4. Run supabase/phase4-schema.sql in SQL Editor
 ```
 
 ---
@@ -168,6 +192,7 @@ npm run preview
 | 14 | docs: update TRACKER.md and TASKS.md - Phase 2 complete | phase-2-adaptive-ai |
 | 15 | feat: Phase 3 - Monaco IDE, real execution, AI review, version history, playground | phase-3-coding-environment |
 | 16 | feat: Phase 3 complete - multi-file, terminal, portfolio, sharing | phase-3-coding-environment |
+| 17 | feat: Phase 4 - Gamification and Social | phase-4-gamification-social |
 
 ---
 
@@ -185,6 +210,10 @@ npm run preview
 - **AI Tutor** tries Anthropic first, falls back to OpenAI, then to smart templates
 - **SM-2 Algorithm**: quality 0-5, easiness factor ≥1.3, interval scheduling in days
 - **XP formula**: level = floor(sqrt(xp/100)) + 1
+- **Gamification engine** (gamification.ts): Unified XP, streaks, badges, notifications, social, challenges, battles, leaderboard
+- **Badge evaluation**: Fetches all badges + user stats, evaluates 15+ requirement types, auto-awards
+- **Streak tracking**: user_streaks table, consecutive day calculation, milestone bonuses
+- **Code battles**: Challenger/opponent model, timed arena, auto-resolve (tests_passed → execution_time → submit_time)
 
 ---
 
@@ -193,10 +222,10 @@ npm run preview
 | Phase | Focus | Timeline |
 |-------|-------|----------|
 | **Phase 3** | **Integrated Coding Environment** | **Weeks 13-18 — ✅ COMPLETE** |
-| Phase 4 | Gamification & Social | Weeks 19-24 |
+| **Phase 4** | **Gamification & Social** | **Weeks 19-24 — ✅ COMPLETE** |
 | Phase 5 | Career Integration | Weeks 25-30 |
 | Phase 6 | Scale & Polish | Weeks 31-36 |
 
 ---
 
-_Last updated: Session 5 (Phase 3 complete)_
+_Last updated: Session 7 (Phase 4 complete)_
