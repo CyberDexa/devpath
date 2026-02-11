@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import ReviewDashboard from '../components/review/ReviewDashboard';
+---
+
+<BaseLayout title="Review" description="Spaced repetition review dashboard. Keep your knowledge fresh with smart scheduling.">
+  <Header />
+  
+  <main class="min-h-screen bg-canvas pt-24 pb-16 px-4">
+    <ReviewDashboard client:load />
+  </main>
+</BaseLayout>

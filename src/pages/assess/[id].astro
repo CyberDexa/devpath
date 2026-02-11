@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import { getRoadmapById, allRoadmaps } from '../../data/roadmaps';
+
+export function getStaticPaths() {
+  return allRoadmaps.map((r) => ({
+    params: { id: r.id },
+  }));
+}
+
+const { id } = Astro.params;
+const roadmap = getRoadmapById(id!);
+
+if (!roadmap) {
+  return Astro.redirect('/404');
+}
+---
+
+<BaseLayout title={`${roadmap.title} Assessment`} description={`Test your ${roadmap.title} skills with a diagnostic quiz.`}>
+  <Header />
+  
+  <main class="min-h-screen bg-canvas pt-24 pb-16 px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- Breadcrumb -->
+      <nav class="mb-6 flex items-center gap-2 text-sm text-text-muted">
+        <a href="/roadmaps" class="hover:text-accent transition-colors">Roadmaps</a>
+        <span>/</span>
+        <a href={`/roadmaps/${roadmap.id}`} class="hover:text-accent transition-colors">{roadmap.title}</a>
+        <span>/</span>
+        <span class="text-text">Assessment</span>
+      </nav>
+
+      <!-- Assessment Component -->
+      <div id="assessment-root" data-roadmap-id={roadmap.id} data-roadmap-title={roadmap.title}>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import { createElement } from 'react';
+  import { createRoot } from 'react-dom/client';
+  import SkillAssessment from '../../components/quiz/SkillAssessment';
+
+  const container = document.getElementById('assessment-root');
+  if (container) {
+    const roadmapId = container.dataset.roadmapId || 'frontend';
+    const roadmapTitle = container.dataset.roadmapTitle || 'Frontend Developer';
+    
+    const root = createRoot(container);
+    root.render(
+      createElement(SkillAssessment, {
+        roadmapId,
+        roadmapTitle,
+        mode: 'diagnostic',
+        onComplete: (results) => {
+          console.log('Assessment complete:', results);
+          // In production, save to Supabase via adaptive-learning.ts
+        },
+      })
+    );
+  }
+</script>

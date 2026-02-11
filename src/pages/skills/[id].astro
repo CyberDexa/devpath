@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import SkillGraph from '../../components/skills/SkillGraph';
+import { getRoadmapById, allRoadmaps } from '../../data/roadmaps';
+
+export function getStaticPaths() {
+  return allRoadmaps.map((r) => ({
+    params: { id: r.id },
+  }));
+}
+
+const { id } = Astro.params;
+const roadmap = getRoadmapById(id!);
+
+if (!roadmap) {
+  return Astro.redirect('/404');
+}
+
+// Serialize nodes for the component
+const nodes = roadmap.nodes.map(n => ({
+  id: n.id,
+  label: n.label,
+  description: n.description,
+  category: n.category,
+  difficulty: n.difficulty,
+  estimatedMinutes: n.estimatedMinutes,
+  position: n.position,
+  resources: n.resources,
+}));
+---
+
+<BaseLayout title={`${roadmap.title} Skills`} description={`Track your ${roadmap.title} skill proficiency.`}>
+  <Header />
+  
+  <main class="min-h-screen bg-canvas pt-24 pb-16 px-4">
+    <div class="max-w-5xl mx-auto">
+      <!-- Breadcrumb -->
+      <nav class="mb-6 flex items-center gap-2 text-sm text-text-muted">
+        <a href="/roadmaps" class="hover:text-accent transition-colors">Roadmaps</a>
+        <span>/</span>
+        <a href={`/roadmaps/${roadmap.id}`} class="hover:text-accent transition-colors">{roadmap.title}</a>
+        <span>/</span>
+        <span class="text-text">Skills</span>
+      </nav>
+
+      <!-- Page Header -->
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-text">{roadmap.icon} {roadmap.title} Skills</h1>
+          <p class="text-text-muted text-sm mt-1">{roadmap.nodes.length} topics tracked</p>
+        </div>
+        <a
+          href={`/assess/${roadmap.id}`}
+          class="px-5 py-2.5 bg-accent text-canvas font-semibold rounded-xl hover:bg-accent/90 transition-colors text-sm inline-flex items-center gap-2"
+        >
+          Take Assessment
+        </a>
+      </div>
+
+      <!-- Skill Graph -->
+      <SkillGraph
+        client:load
+        roadmapId={roadmap.id}
+        roadmapTitle={roadmap.title}
+        nodes={nodes}
+      />
+    </div>
+  </main>
+</BaseLayout>

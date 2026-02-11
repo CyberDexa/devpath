@@ -66,20 +66,28 @@ if (!roadmap) {
         </div>
       </div>
 
-      <!-- Personalization CTA -->
+      <!-- Skill Assessment CTA -->
       <div class="rounded-xl bg-surface border border-white/5 p-6">
         <h3 class="font-display font-bold text-bright mb-3 text-sm uppercase tracking-wider">
-          Personalize
+          Assess Skills
         </h3>
         <p class="text-sm text-dim mb-4">
-          Take a quick assessment to get a customized version of this roadmap based on your current skills.
+          Take a diagnostic quiz to identify your strengths and gaps. We'll personalize your learning path.
         </p>
-        <a
-          href="/ai-tutor"
-          class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold bg-teal text-void hover:bg-teal-dim transition-all duration-200"
-        >
-          Start Assessment
-        </a>
+        <div class="flex gap-2">
+          <a
+            href={`/assess/${roadmap.id}`}
+            class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold bg-teal text-void hover:bg-teal-dim transition-all duration-200"
+          >
+            Take Quiz
+          </a>
+          <a
+            href={`/skills/${roadmap.id}`}
+            class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-raised border border-white/8 text-text hover:bg-elevated transition-all"
+          >
+            View Skills
+          </a>
+        </div>
       </div>
 
       <!-- AI Tutor CTA -->

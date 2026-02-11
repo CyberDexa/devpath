@@ -20,14 +20,14 @@
 ## Progress Dashboard
 
 ```
-Phase 1: Foundation        [█████████░] 95%  <-- CURRENT
-Phase 2: Adaptive AI       [░░░░░░░░░░] 0%
+Phase 1: Foundation        [██████████] 100%
+Phase 2: Adaptive AI       [██████░░░░] 60%  <-- CURRENT
 Phase 3: Code Environment  [░░░░░░░░░░] 0%
 Phase 4: Gamification      [░░░░░░░░░░] 0%
 Phase 5: Career Integration[░░░░░░░░░░] 0%
 Phase 6: Polish & Scale    [░░░░░░░░░░] 0%
 ──────────────────────────────────────────
-Overall Progress           [██░░░░░░░░] 16%
+Overall Progress           [███░░░░░░░] 27%
 ```
 
 ---
@@ -110,11 +110,11 @@ Overall Progress           [██░░░░░░░░] 16%
 - [x] Responsive mobile testing passed (375px, 768px, 1280px)
 
 ### Milestone 1 Remaining
-- [ ] Deploy to production (Vercel + @astrojs/vercel adapter)
+- [x] Deploy to production (Vercel + @astrojs/vercel adapter) — devpath-phi.vercel.app
+- [x] Wire ProfileDashboard to load real Supabase data
+- [x] Wire SettingsPanel to update real Supabase data
+- [x] Wire Leaderboard to real Supabase data
 - [ ] Create Supabase project, run schema.sql, configure OAuth providers
-- [ ] Wire ProfileDashboard to load real Supabase data (currently mock)
-- [ ] Wire SettingsPanel to update real Supabase data (currently mock)
-- [ ] Wire Leaderboard to real Supabase data (currently mock)
 - [ ] SEO meta tags and Open Graph images
 - [ ] Lighthouse performance audit
 
@@ -124,34 +124,44 @@ Overall Progress           [██░░░░░░░░] 16%
 *Goal: Personalization that roadmap.sh completely lacks*
 
 ### Week 7: Skill Assessment System
-- [ ] Design diagnostic quiz format
-- [ ] Create question bank per roadmap topic
-- [ ] Build quiz UI component
-- [ ] Scoring algorithm (proficiency estimation)
-- [ ] Initial skill placement on signup
+- [x] Design diagnostic quiz format (intro → questions → explanation → results)
+- [x] Create question bank per roadmap topic (56 questions across 5 roadmaps)
+- [x] Build quiz UI component (SkillAssessment.tsx with animations)
+- [x] Scoring algorithm (per-node proficiency + confidence estimation)
+- [x] Assessment pages for all 5 roadmaps (/assess/[id])
+- [ ] Initial skill placement on signup (auto-redirect to diagnostic)
 
 ### Week 8: User Skill Graph
-- [ ] Design user_skills schema
-- [ ] Skill graph visualization (D3.js/Vis.js)
+- [x] Design user_skills schema (proficiency, confidence, times_tested)
+- [x] Skill graph visualization (SVG radar chart + proficiency bars)
+- [x] Skill status system (strong/moderate/weak/untested)
+- [x] Skills pages for all 5 roadmaps (/skills/[id])
+- [x] Recommended next steps based on skill gaps
 - [ ] Skill comparison view (current vs target role)
 
 ### Week 9: Spaced Repetition Engine
-- [ ] Implement SM-2 algorithm variant
-- [ ] Create review scheduler
-- [ ] Design micro-quiz format
+- [x] Implement SM-2 algorithm (spaced-repetition.ts)
+- [x] Quality rating from answer correctness + time
+- [x] Review scheduler (getDueItems, getReviewStats)
+- [x] Review dashboard with session mode (ReviewDashboard.tsx)
+- [x] Knowledge strength visualization (mastered/learning/struggling)
+- [x] Auto-enqueue missed quiz questions for review
 - [ ] Push notification integration
-- [ ] Review queue dashboard
 
 ### Week 10: Adaptive Path Generation
-- [ ] Train/prompt Claude for path generation
-- [ ] Input: user skill graph, goals, timeline
-- [ ] Output: personalized node ordering
-- [ ] "Skip what you know" logic
-- [ ] Daily/weekly learning plan generation
+- [x] AI-powered learning plan generation (ai-tutor-enhanced.ts)
+- [x] Input: user skill graph, goals, timeline, available time
+- [x] Learning plans table in database schema
+- [x] Save/load active learning plans
+- [ ] "Skip what you know" logic in roadmap viewer
+- [ ] Daily/weekly learning plan UI page
 
 ### Week 11: AI Tutor Enhancement
-- [ ] Context injection: current topic + skill graph
-- [ ] Conversation persistence to Supabase
+- [x] Context injection: current topic + skill graph + user level
+- [x] Context-aware system prompt builder (buildContextPrompt)
+- [x] Personalized topic explanations (explainTopic)
+- [x] sendContextualTutorMessage with skill awareness
+- [ ] Conversation persistence to Supabase (data layer ready)
 - [ ] Rate limiting and cost controls
 - [ ] Streaming responses
 
