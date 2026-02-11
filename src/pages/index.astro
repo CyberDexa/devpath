@@ -334,6 +334,80 @@ import { allRoadmaps } from "../data/roadmaps";
         ))}
       </div>
     </div>
+    <!-- Career Integration Section -->
+    <div class="max-w-7xl mx-auto px-6 mb-24 lg:mb-32">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet/10 border border-violet/20 text-violet text-xs font-medium mb-6">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          New: Career Integration
+        </div>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bright mb-4">
+          From skills to <span class="text-gradient">career outcomes</span>
+        </h2>
+        <p class="text-dim text-lg max-w-xl mx-auto">
+          Verify your skills, build a portfolio, craft resumes, and find jobs that match your abilities — all in one platform.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          {
+            icon: "🛡️",
+            title: "Skill Verification",
+            desc: "Take proctored challenges to verify your knowledge. Earn verifiable certificates that prove your skills to employers.",
+            href: "/verify",
+            color: "teal",
+          },
+          {
+            icon: "📜",
+            title: "Digital Certificates",
+            desc: "Earn certificates for verifications, roadmap completions, battle victories, and streaks. Share and verify with a unique ID.",
+            href: "/certificates",
+            color: "violet",
+          },
+          {
+            icon: "🌐",
+            title: "Portfolio Builder",
+            desc: "Create a stunning developer portfolio with 6 themes, auto-populated stats, badges, and projects. Publish with one click.",
+            href: "/portfolio-builder",
+            color: "sky",
+          },
+          {
+            icon: "📄",
+            title: "Resume Builder",
+            desc: "Build professional resumes with 5 templates and AI-powered suggestions based on your verified skills and achievements.",
+            href: "/resume",
+            color: "amber",
+          },
+          {
+            icon: "💼",
+            title: "Job Board & Matching",
+            desc: "Browse developer jobs with AI-powered skill matching. See your compatibility score and apply directly from the platform.",
+            href: "/jobs",
+            color: "emerald",
+          },
+          {
+            icon: "🎤",
+            title: "Mock Interviews",
+            desc: "Practice behavioral, technical, system design, and coding interviews. Get AI feedback with scores and improvement tips.",
+            href: "/interviews",
+            color: "rose",
+          },
+        ].map((feature) => (
+          <a
+            href={feature.href}
+            class="group block rounded-xl bg-surface border border-white/5 p-6 hover:border-violet/15 transition-all duration-300 hover:shadow-glow"
+          >
+            <span class="text-3xl mb-4 block">{feature.icon}</span>
+            <h3 class="font-display font-bold text-bright text-base mb-2 group-hover:text-violet transition-colors">
+              {feature.title}
+            </h3>
+            <p class="text-sm text-dim leading-relaxed">{feature.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex items-end justify-between mb-12">
         <div>
@@ -444,7 +518,11 @@ import { allRoadmaps } from "../data/roadmaps";
             ["1v1 Code Battles", false, true],
             ["Social Feed & Follows", false, true],
             ["Verified Skill Badges", false, true],
+            ["Digital Certificates", false, true],
+            ["Portfolio Generator", false, true],
+            ["Resume Builder", false, true],
             ["Job Matching", false, true],
+            ["Mock Interviews", false, true],
             ["AI Code Review", false, true],
           ].map(([feature, others, devpath]) => (
             <div class="grid grid-cols-3 border-b border-white/3 last:border-0 text-sm">

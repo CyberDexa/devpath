@@ -1,0 +1,15 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/layout/Header.astro";
+import SkillVerification from "../components/career/SkillVerification";
+---
+
+<BaseLayout title="Skill Verification | DevPath">
+  <Header />
+
+  <main class="pt-20 min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-8">
+      <SkillVerification client:load userId="" />
+    </div>
+  </main>
+</BaseLayout>
